@@ -1,6 +1,6 @@
 package com.dugu.test.util.result;
 
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;

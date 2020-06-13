@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Comparator.comparingLong;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
@@ -64,5 +63,17 @@ public class ListObjectDemoForApple {
 
     public static BigDecimal sum(List<Apple> appleList) {
         return appleList.stream().map(Apple::getMoney).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public static Double sum2(List<Apple> appleList) {
+        return appleList.stream().mapToDouble(item -> item.getMoney().doubleValue()).sum();
+    }
+
+    public static List<Apple> sortAsc(List<Apple> appleList) {
+        return appleList.stream().sorted(Comparator.comparing(Apple::getNum)).collect(Collectors.toList());
+    }
+
+    public static List<Apple> sortDesc(List<Apple> appleList) {
+        return appleList.stream().sorted(Comparator.comparing(Apple::getNum,Comparator.reverseOrder())).collect(Collectors.toList());
     }
 }

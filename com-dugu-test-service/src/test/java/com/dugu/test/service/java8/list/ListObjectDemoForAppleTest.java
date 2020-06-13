@@ -67,4 +67,19 @@ public class ListObjectDemoForAppleTest {
     public void sum() {
         System.out.println("sum=" + ListObjectDemoForApple.sum(appleList).doubleValue());
     }
+
+    @Test
+    public void sum2() {
+        System.out.println("sum=" + ListObjectDemoForApple.sum2(appleList));
+    }
+
+    @Test
+    public void sortAscByNum() {
+        ListObjectDemoForApple.sortAsc(appleList).forEach(System.out::println);
+    }
+
+    @Test
+    public void sortDescByNum() {
+        ListObjectDemoForApple.sortDesc(appleList).forEach(System.out::println);
+    }
 }

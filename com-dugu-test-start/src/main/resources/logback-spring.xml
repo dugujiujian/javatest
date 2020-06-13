@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- https://github.com/spring-projects/spring-boot/blob/v1.5.13.RELEASE/spring-boot/src/main/resources/org/springframework/boot/logging/logback/defaults.xml -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="com/alibaba/boot/logback/alimonitor.xml"/>
+
+
+    <property name="APP_NAME" value="lst-task-clerk"/>
+    <property name="LOG_PATH" value="${user.home}/${APP_NAME}/logs"/>
+    <property name="LOG_FILE" value="${LOG_PATH}/application.log"/>
+
+    <property name="XFLUSH_LOG_PATH" value="${user.home}/${APP_NAME}/logs/xflush"/>
+    <property name="XFLUSH_LOG_PATTERN" value="%d,%m%n"/>
+
+    <property name="BIZ_LOG_PATH" value="${LOG_PATH}/biz"/>
+
+    <property name="BIZ_LOG_FILE" value="${LOG_PATH}/biz/biz.log"/>
+    <property name="ACTION_MESSAGE_LOG_FILE" value="${LOG_PATH}/biz/action_message.log"/>
+
+    <property name="TASK_MESSAGE_LISTENER_XFLUSH_LOG_FILE" value="${LOG_PATH}/xflush/core_message_task.log" />
+    <include resource="com/alibaba/lst/brandservice/task/message/listener/logback/xflush.xml" />
+
+
+    <appender name="APPLICATION"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <maxFileSize>50MB</maxFileSize>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="BIZ_APPDENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${BIZ_LOG_FILE}</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${BIZ_LOG_FILE}.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+
+    <appender name="ACTION_MESSAGE_APPDENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${ACTION_MESSAGE_LOG_FILE}</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${ACTION_MESSAGE_LOG_FILE}.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 任务状态消息xflush log -->
+    <appender name="TASK_CHANGED_MESSAGE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${XFLUSH_LOG_PATH}/task_change_message.log</file>
+        <encoder>
+            <pattern>${XFLUSH_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${XFLUSH_LOG_PATH}/task_change_message.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+
+    <appender name="TASK_ALARM_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${XFLUSH_LOG_PATH}/alarm.log</file>
+        <encoder>
+            <pattern>${XFLUSH_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${XFLUSH_LOG_PATH}/alarm.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="TASK_CORE_METHOD_MONITOR_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${XFLUSH_LOG_PATH}/core_method.log</file>
+        <encoder>
+            <pattern>${XFLUSH_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${XFLUSH_LOG_PATH}/core_method.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+
+    <appender name="TASK_CORE_METHOD_SLS_MONITOR_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${BIZ_LOG_PATH}/core_method_sls.log</file>
+        <encoder>
+            <pattern>${XFLUSH_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${BIZ_LOG_PATH}/core_method_sls.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+
+
+    <appender name="TASK_PERMIT_MONITOR_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${BIZ_LOG_PATH}/permit.log</file>
+        <encoder>
+            <pattern>${XFLUSH_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${BIZ_LOG_PATH}/permit.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+
+
+    <appender name="REPAIR_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${BIZ_LOG_PATH}/repair.log</file>
+        <encoder>
+            <pattern>${XFLUSH_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${BIZ_LOG_PATH}/repair.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="TASK_MESSAGE_HANDLER_MONITOR_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${BIZ_LOG_PATH}/task_message_handler.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [ %thread ]  - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${BIZ_LOG_PATH}/task_message_handler.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="taskChangedMessageLogger" level="INFO" additivity="false">
+        <appender-ref ref="TASK_CHANGED_MESSAGE_APPENDER"/>
+    </logger>
+
+    <logger name="biz" level="INFO" additivity="false">
+        <appender-ref ref="BIZ_APPDENDER"/>
+    </logger>
+
+    <logger name="actionMessage" level="TRACE" additivity="false">
+        <appender-ref ref="ACTION_MESSAGE_APPDENDER"/>
+    </logger>
+
+    <logger name="alarm" level="INFO" additivity="false">
+        <appender-ref ref="TASK_ALARM_APPENDER"/>
+    </logger>
+
+    <logger name="repair" level="INFO" additivity="false">
+        <appender-ref ref="REPAIR_APPENDER"/>
+    </logger>
+
+    <logger name="coreMethodLogger" level="INFO" additivity="false">
+        <appender-ref ref="TASK_CORE_METHOD_MONITOR_APPENDER"/>
+    </logger>
+
+    <logger name="coreMethodSlsLogger" level="INFO" additivity="false">
+        <appender-ref ref="TASK_CORE_METHOD_SLS_MONITOR_APPENDER"/>
+    </logger>
+
+    <logger name="permitLogger" level="INFO" additivity="false">
+        <appender-ref ref="TASK_PERMIT_MONITOR_APPENDER"/>
+    </logger>
+
+    <logger name="taskMessageHandlerLogger" level="INFO" additivity="false">
+        <appender-ref ref="TASK_MESSAGE_HANDLER_MONITOR_APPENDER"/>
+    </logger>
+
+
+
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="APPLICATION"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="!dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="APPLICATION"/>
+            <appender-ref ref="ALIMONITOR"/>
+        </root>
+    </springProfile>
+
+
+
+</configuration>

@@ -2,9 +2,12 @@ package com.dugu.test.service.java8.list;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * @Description TODO
@@ -23,5 +26,19 @@ public class ListArrayDemo {
 
     public String[] convertFromString(List<String> list) {
         return list.stream().toArray(String[]::new);
+    }
+
+
+    public static String toString(List<Integer> list) {
+        return list.stream().map(String::valueOf).distinct().collect(joining(","));
+    }
+
+    public static List<Integer> stringToList(String s) {
+        return Stream.of(s)
+                .map(item -> item.split(","))
+                .flatMap(Arrays::stream)
+                .mapToInt(Integer::valueOf)
+                .boxed()
+                .collect(Collectors.toList());
     }
 }

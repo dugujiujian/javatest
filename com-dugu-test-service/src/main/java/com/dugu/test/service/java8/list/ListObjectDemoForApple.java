@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
 
 /**
@@ -74,6 +75,7 @@ public class ListObjectDemoForApple {
     }
 
     public static List<Apple> sortDesc(List<Apple> appleList) {
-        return appleList.stream().sorted(Comparator.comparing(Apple::getNum,Comparator.reverseOrder())).collect(Collectors.toList());
+        return appleList.stream().sorted(Comparator.comparing(Apple::getNum, Comparator.reverseOrder())).collect(Collectors.toList());
     }
+
 }

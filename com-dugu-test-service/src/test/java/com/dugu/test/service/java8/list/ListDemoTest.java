@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * @Description TODO
@@ -17,10 +18,9 @@ public class ListDemoTest {
     @Test
     public void count() {
         List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            list.add(i);
-        }
+        IntStream.rangeClosed(1,20).forEach(item-> list.add(item));
         Assert.assertEquals(list.size(), ListDemo.count(list));
+        list.stream().forEach(System.out::println);
     }
 
     @Test
@@ -84,7 +84,6 @@ public class ListDemoTest {
         list.add(10);
         ListDemo.oddEven(list).entrySet().forEach(System.out::println);
     }
-
 
 
 }

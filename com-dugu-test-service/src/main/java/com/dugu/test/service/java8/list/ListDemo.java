@@ -1,11 +1,15 @@
 package com.dugu.test.service.java8.list;
 
+import com.dugu.test.service.java8.list.domain.Apple;
+
 import java.awt.font.NumericShaper;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * @Description TODO
@@ -34,5 +38,7 @@ public class ListDemo {
     public static Map<Boolean, List<Integer>> oddEven(List<Integer> list) {
         return list.stream().collect(Collectors.partitioningBy(i -> i % 2 == 0));
     }
+
+
 
 }

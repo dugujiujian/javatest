@@ -82,4 +82,5 @@ public class ListObjectDemoForAppleTest {
     public void sortDescByNum() {
         ListObjectDemoForApple.sortDesc(appleList).forEach(System.out::println);
     }
+
 }

@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 
 /**
  * @Description TODO
- * @Author by zhangliping
+ * @Author by zlp
  * @Date 2020/6/21 12:22 PM
  */
 public class PredicateDemo {

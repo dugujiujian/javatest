@@ -15,7 +15,7 @@ public class LogUtilTest {
 
     @Test
     public void testInfo() {
-        LogUtil.info(log, "{0}", "adddd");
+        LogUtil.info(log, "{0},{1}", "s", 2);
     }
 
 }

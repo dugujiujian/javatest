@@ -2,8 +2,7 @@ package com.dugu.test.service.java8.file.excel;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +12,8 @@ import java.util.List;
  * @Author by cihun
  * @Date 2020/5/23 4:33 PM
  */
+@Slf4j
 public class ExcelDataListener extends AnalysisEventListener<ExcelTestData> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelDataListener.class);
     /**
      * 每隔5条存储数据库，实际使用中可以3000条，然后清理list ，方便内存回收
      */

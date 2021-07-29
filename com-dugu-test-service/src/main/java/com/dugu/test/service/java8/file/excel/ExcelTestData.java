@@ -19,7 +19,7 @@ public class ExcelTestData {
     @ExcelProperty(value = "品牌名称", index = 1)
     private String brandName;
     @ExcelProperty(value = "商家ID", index = 2)
-    private Long merchangUserId;
+    private Long merchantUserId;
     @ExcelProperty(value = "商品名称", index = 3)
     private String companyName;
     @ExcelProperty(value = "商家类型", index = 4)

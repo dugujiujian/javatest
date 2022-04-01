@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ExcelData1 extends BaseRowModel {
-    @ExcelProperty(value = "品牌ID", index = 0)
-    private Long brandId;
+public class ExcelData2 extends BaseRowModel {
+    @ExcelProperty(value = "类目ID", index = 0)
+    private Long cateId;
 }

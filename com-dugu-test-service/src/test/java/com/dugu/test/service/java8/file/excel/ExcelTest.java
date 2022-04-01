@@ -73,7 +73,7 @@ public class ExcelTest {
             ExcelTestData data = new ExcelTestData();
             data.setBrandId(Long.valueOf(i));
             data.setBrandName("b" + i);
-            data.setMerchangUserId(Long.valueOf(i));
+            data.setMerchantUserId(Long.valueOf(i));
             data.setCompanyName("c" + i);
             data.setMerchantSource("供应商");
             list.add(data);
@@ -112,7 +112,7 @@ public class ExcelTest {
         ExcelTestData data = new ExcelTestData();
         data.setBrandId(Long.valueOf(arr[0]));
         data.setBrandName(arr[1]);
-        data.setMerchangUserId(Long.valueOf(arr[2]));
+        data.setMerchantUserId(Long.valueOf(arr[2]));
         data.setCompanyName(arr[3]);
         data.setMerchantSource(arr[4]);
         return data;

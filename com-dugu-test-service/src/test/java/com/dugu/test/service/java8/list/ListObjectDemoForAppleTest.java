@@ -3,13 +3,10 @@ package com.dugu.test.service.java8.list;
 import com.dugu.test.service.java8.list.domain.Apple;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.annotation.Bean;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * @Description TODO

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+
+    <property name="XFLUSH_LOG_PATH" value="${user.home}/${APP_NAME}/logs/xflush"/>
+    <property name="XFLUSH_LOG_PATTERN" value="%d,%m%n"/>
+
+    <appender name="XFLUSH_APPDENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${XFLUSH_LOG_PATH}/xflush.log</file>
+        <encoder>
+            <pattern>${XFLUSH_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${XFLUSH_LOG_PATH}/xflush.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>14</maxHistory>
+            <totalSizeCap>4GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+</included>

@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.dugu.test.service.distribute.lock.autoconfig.DistributeLockAutoConfiguration

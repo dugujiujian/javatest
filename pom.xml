@@ -34,12 +34,16 @@
         <!--starter -->
         <mybatis-starter.version>1.1.1</mybatis-starter.version>
 
+
+        <jedis.version>3.5.2</jedis.version>
+        <rdb2.version>2.3.3</rdb2.version>
+
     </properties>
 
 
     <modules>
         <module>com-dugu-test-common</module>
-        <module>com-dugu-test-service</module>
+        <module>com-dugu-test-services</module>
         <module>com-dugu-test-start</module>
     </modules>
 
@@ -54,9 +58,14 @@
             </dependency>
             <dependency>
                 <groupId>com.dugu.javatest</groupId>
-                <artifactId>com-dugu-test-service</artifactId>
+                <artifactId>com-dugu-test-service-default</artifactId>
                 <version>${project.version}</version>
             </dependency>
+                       <dependency>
+                            <groupId>com.dugu.javatest</groupId>
+                            <artifactId>com-dugu-test-service-distribute-lock</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
             <dependency>
                 <groupId>com.dugu.javatest</groupId>
                 <artifactId>com-dugu-test-start</artifactId>
@@ -143,6 +152,13 @@
                 <artifactId>guava</artifactId>
                 <version>19.0</version>
             </dependency>
+
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
+            </dependency>
+
 
 
         </dependencies>

@@ -16,7 +16,11 @@
 
         <dependency>
             <groupId>com.dugu.javatest</groupId>
-            <artifactId>com-dugu-test-service</artifactId>
+            <artifactId>com-dugu-test-service-default</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dugu.javatest</groupId>
+            <artifactId>com-dugu-test-service-distribute-lock</artifactId>
         </dependency>
 
         <dependency>

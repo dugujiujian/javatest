@@ -1,16 +1,15 @@
 package com.dugu.test;
 
 import org.springframework.boot.Banner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.ansi.AnsiOutput;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.core.SpringVersion;
 
 /**
- * @Description TODO
- * @Author by cihun
- * @Date 2020/6/12 10:49 PM
+ * @description TODO
+ * @author by cihun
+ * @date 2020/6/12 10:49 PM
  */
 @SpringBootApplication
 public class Application {

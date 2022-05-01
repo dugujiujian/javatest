@@ -22,19 +22,20 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven-antrun.version>1.8</maven-antrun.version>
+        <!-- spring boot -->
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
         <!-- Test -->
         <junit.version>4.12</junit.version>
+        <mockito-all.version>1.10.19</mockito-all.version>
         <!--tool plugins -->
-        <commons.lang3.version>3.6</commons.lang3.version>
         <lombok.version>1.16.16</lombok.version>
         <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
-        <odps.version>0.16.7</odps.version>
+        <commons-lang3.version>3.10</commons-lang3.version>
 
         <!--starter -->
         <mybatis-starter.version>1.1.1</mybatis-starter.version>
 
-
+        <!-- redis  -->
         <jedis.version>3.5.2</jedis.version>
         <rdb2.version>2.3.3</rdb2.version>
 
@@ -50,7 +51,7 @@
 
     <dependencyManagement>
         <dependencies>
-
+            <!-- 应用模块 -->
             <dependency>
                 <groupId>com.dugu.javatest</groupId>
                 <artifactId>com-dugu-test-common</artifactId>
@@ -61,17 +62,17 @@
                 <artifactId>com-dugu-test-service-default</artifactId>
                 <version>${project.version}</version>
             </dependency>
-                       <dependency>
-                            <groupId>com.dugu.javatest</groupId>
-                            <artifactId>com-dugu-test-service-distribute-lock</artifactId>
-                            <version>${project.version}</version>
-                        </dependency>
+            <dependency>
+                <groupId>com.dugu.javatest</groupId>
+                <artifactId>com-dugu-test-service-distribute-lock</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.dugu.javatest</groupId>
                 <artifactId>com-dugu-test-start</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <!-- spring-boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -80,12 +81,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>1.10.19</version>
-                <scope>test</scope>
-            </dependency>
 
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -101,7 +96,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.10</version>
+                <version>${commons-lang3.version}</version>
             </dependency>
 
             <!-- test   -->
@@ -128,9 +123,8 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
-                <version>1.2.60</version>
+                <version>1.2.75</version>
             </dependency>
-
 
 
             <dependency>
@@ -152,6 +146,12 @@
                 <scope>test</scope> <!-- test scope to use it only in tests -->
             </dependency>
 
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito-all.version}</version>
+                <scope>test</scope>
+            </dependency>
 
 
         </dependencies>

@@ -20,7 +20,7 @@ public enum TaxEnum {
     /**
      * 规模纳税人
      */
-    GM_TAXER(1001, "规模纳税人");
+    GM_TAXER(1002, "规模纳税人");
 
     /**
      * 编码

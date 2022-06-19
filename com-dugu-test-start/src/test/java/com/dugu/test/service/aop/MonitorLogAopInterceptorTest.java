@@ -22,6 +22,7 @@ public class MonitorLogAopInterceptorTest {
     @Test
     public void test(){
         aopService.cal(1,2);
+
     }
 
 

@@ -1,5 +1,6 @@
 package com.dugu.test.result;
 
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**

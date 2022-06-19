@@ -6,7 +6,7 @@ package com.dugu.test.service.retry;
  */
 public interface TestRetryService {
 
-    int test(int code) throws Exception;
+    int test(int code);
 
     int recover(Exception e);
 }

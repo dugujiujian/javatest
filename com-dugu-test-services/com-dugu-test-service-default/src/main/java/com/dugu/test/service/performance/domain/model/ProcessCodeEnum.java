@@ -1,4 +1,4 @@
-package com.dugu.test.service.performance.domain;
+package com.dugu.test.service.performance.domain.model;
 
 import lombok.Getter;
 

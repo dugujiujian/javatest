@@ -16,4 +16,11 @@ import java.io.Serializable;
 public class PfmDocDTO implements Serializable {
 
     private String docId;
+    private String planId;
+    private String templateId;
+
+    private UserSimpleDTO user;
+    private UserSimpleDTO leader;
+    private DepartDTO department;
+
 }

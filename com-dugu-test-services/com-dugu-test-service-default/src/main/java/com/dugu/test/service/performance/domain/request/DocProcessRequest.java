@@ -1,8 +1,9 @@
-package com.dugu.test.service.performance.domain;
+package com.dugu.test.service.performance.domain.request;
 
-import lombok.Builder;
+import com.dugu.test.service.performance.domain.PfmDocDTO;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -12,8 +13,13 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-@Builder
+@ToString
 public class DocProcessRequest implements Serializable {
+
+    /**
+     * 文档Id
+     */
+    private String docId;
     /**
      * 文档信息
      */

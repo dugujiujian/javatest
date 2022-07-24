@@ -1,8 +1,8 @@
-package com.dugu.test.service.performance.inf;
+package com.dugu.test.service.performance.factory;
 
-import com.dugu.test.service.performance.domain.DocProcessRequest;
-import com.dugu.test.service.performance.domain.DocProcessResponse;
-import com.dugu.test.service.performance.domain.ProcessCodeEnum;
+import com.dugu.test.service.performance.domain.request.DocProcessRequest;
+import com.dugu.test.service.performance.domain.response.DocProcessResponse;
+import com.dugu.test.service.performance.domain.model.ProcessCodeEnum;
 
 /**
  * @author cihun
@@ -34,7 +34,7 @@ public interface DocProcessProcessor {
      * @param response 输出
      * @return true=处理成功
      */
-    boolean handle(DocProcessResponse response);
+    boolean doHandler(DocProcessResponse response);
 
     /**
      * 后置方法

@@ -6,12 +6,11 @@ import lombok.ToString;
 
 /**
  * @author cihun
- * @date 2022-07-23 10:22 上午
+ * @date 2022-07-23 10:45 下午
  */
 @Getter
 @Setter
 @ToString
-public class DocProcessResponse {
-
-    private ProcessCodeEnum nextProcessCode;
+public class PfmTemplateDTO {
+    private String id;
 }

@@ -1,6 +1,7 @@
 package com.dugu.test.service.performance.domain.request;
 
 import com.dugu.test.service.performance.domain.PfmDocDTO;
+import com.dugu.test.service.performance.domain.model.ProcessCodeEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,8 +21,8 @@ public class DocProcessRequest implements Serializable {
      * 文档Id
      */
     private String docId;
-    /**
-     * 文档信息
-     */
-    private PfmDocDTO docInfo;
+
+    private ProcessCodeEnum nextNode;
+
+
 }

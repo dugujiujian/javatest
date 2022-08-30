@@ -3,6 +3,7 @@ package com.dugu.test.service.performance.chain;
 import com.dugu.test.service.performance.domain.request.DocProcessRequest;
 import com.dugu.test.service.performance.domain.response.DocProcessResponse;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -12,17 +13,18 @@ import java.util.List;
  * @author cihun
  * @date 2022-07-23 2:50 下午
  */
+@Setter
+@ToString
 public class PerformanceHandlerChain {
 
     /**
      * 处理器集合
      */
-    @Setter
-    private List<PerformanceHandler> handlers;
+    List<PerformanceHandler> handlers;
     /**
      * 处理器索引下标
      */
-    private int current = 0;
+    int current = 0;
 
     public void doHandler(DocProcessRequest request, DocProcessResponse response) {
         current++;

@@ -15,10 +15,19 @@ public interface PerformanceHandler {
      * @param request
      * @param response
      * @param chain
+     * @return true 处理成功
      */
     void doHandler(DocProcessRequest request,
-                   DocProcessResponse response,
-                   PerformanceHandlerChain chain);
+                      DocProcessResponse response,
+                      PerformanceHandlerChain chain);
+
+    /**
+     * 错误信息处理
+     *
+     * @param request
+     * @param response
+     */
+    void onException(DocProcessRequest request, DocProcessResponse response);
 
     /**
      * 排序

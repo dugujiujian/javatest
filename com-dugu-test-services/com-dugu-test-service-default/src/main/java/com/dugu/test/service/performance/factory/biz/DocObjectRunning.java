@@ -1,6 +1,5 @@
 package com.dugu.test.service.performance.factory.biz;
 
-import com.dugu.test.service.performance.aop.ProcessCodeType;
 import com.dugu.test.service.performance.domain.model.ProcessCodeEnum;
 import com.dugu.test.service.performance.domain.response.DocProcessResponse;
 import com.dugu.test.service.performance.factory.AbsDocProcessProcessor;

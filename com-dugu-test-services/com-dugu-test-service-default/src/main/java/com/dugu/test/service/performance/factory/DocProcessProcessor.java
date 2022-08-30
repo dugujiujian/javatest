@@ -1,8 +1,8 @@
 package com.dugu.test.service.performance.factory;
 
+import com.dugu.test.service.performance.domain.model.ProcessCodeEnum;
 import com.dugu.test.service.performance.domain.request.DocProcessRequest;
 import com.dugu.test.service.performance.domain.response.DocProcessResponse;
-import com.dugu.test.service.performance.domain.model.ProcessCodeEnum;
 
 /**
  * @author cihun

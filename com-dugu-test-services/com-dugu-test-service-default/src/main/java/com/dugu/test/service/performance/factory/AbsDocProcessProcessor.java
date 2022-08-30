@@ -30,7 +30,7 @@ public abstract class AbsDocProcessProcessor implements DocProcessProcessor {
         // 下一个节点模版配置
         response.setNextConfig(new TemplateNodeConfig());
         // 下一个节点
-        response.setNextProcessCode(ProcessCodeEnum.objectives_approval);
+        response.setNextProcessCode(request.getNextNode());
         return true;
     }
 

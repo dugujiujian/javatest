@@ -1,8 +1,14 @@
 package com.dugu.test.service.performance.factory;
 
+import com.dugu.test.service.performance.chain.DocProcessChainServiceImpl;
+import com.dugu.test.service.performance.chain.biz.AfterHandlerImpl;
+import com.dugu.test.service.performance.chain.biz.BizHandlerImpl;
+import com.dugu.test.service.performance.chain.biz.InitHandlerImpl;
+import com.dugu.test.service.performance.chain.biz.MessageHandlerImpl;
 import com.dugu.test.service.performance.domain.model.ProcessCodeEnum;
 import com.dugu.test.service.performance.domain.request.DocProcessRequest;
 import com.dugu.test.service.performance.domain.response.DocProcessResponse;
+import com.dugu.test.service.performance.factory.biz.DocEmployeeScoreProcessor;
 import com.dugu.test.service.performance.factory.biz.DocObjectEntryProcessor;
 import com.dugu.test.service.performance.factory.biz.DocObjectivesApprovalProcessor;
 import com.dugu.test.service.performance.msg.DocMessageSendStrategyContext;
@@ -26,10 +32,16 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
         classes = {
                 DocProcessProcessorFactory.class,
                 DocMessageSendStrategyContext.class,
+                DocProcessChainServiceImpl.class,
                 DocObjectEntryProcessor.class,
                 DocObjectivesApprovalProcessor.class,
+                DocEmployeeScoreProcessor.class,
                 DocObjectEntryMsgProcessor.class,
-                DocObjectivesApprovalMsgProcessor.class})
+                DocObjectivesApprovalMsgProcessor.class,
+                InitHandlerImpl.class,
+                BizHandlerImpl.class,
+                AfterHandlerImpl.class,
+                MessageHandlerImpl.class})
 public class DocProcessProcessorFactoryTest {
 
 
@@ -39,7 +51,18 @@ public class DocProcessProcessorFactoryTest {
 
     @Test
     public void testObjectEntry() {
-        DocProcessProcessor processProcessor = docProcessProcessorFactory.getProcessor(ProcessCodeEnum.objectives_approval);
+        DocProcessProcessor processProcessor = docProcessProcessorFactory.getProcessor(ProcessCodeEnum.objectives_entry);
+        //Assert.assertNotNull(processProcessor);
+        DocProcessRequest request = new DocProcessRequest();
+        request.setDocId("1");
+        request.setNextNode(ProcessCodeEnum.employee_score);
+        DocProcessResponse response = new DocProcessResponse();
+        processProcessor.execute(request, response);
+    }
+
+    @Test
+    public void testEmployeeScore() {
+        DocProcessProcessor processProcessor = docProcessProcessorFactory.getProcessor(ProcessCodeEnum.employee_score);
         Assert.assertNotNull(processProcessor);
         DocProcessRequest request = new DocProcessRequest();
         DocProcessResponse response = new DocProcessResponse();

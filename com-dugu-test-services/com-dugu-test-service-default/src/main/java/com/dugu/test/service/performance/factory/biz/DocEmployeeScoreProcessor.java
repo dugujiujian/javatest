@@ -1,6 +1,6 @@
 package com.dugu.test.service.performance.factory.biz;
 
-import com.dugu.test.service.performance.chain.DocProcessChainService;
+import com.dugu.test.service.design.cor.perf.DocProcessChainService;
 import com.dugu.test.service.performance.domain.model.ProcessCodeEnum;
 import com.dugu.test.service.performance.domain.request.DocProcessRequest;
 import com.dugu.test.service.performance.domain.response.DocProcessResponse;

@@ -1,10 +1,10 @@
 package com.dugu.test.service.performance.factory;
 
-import com.dugu.test.service.performance.chain.DocProcessChainServiceImpl;
-import com.dugu.test.service.performance.chain.biz.AfterHandlerImpl;
-import com.dugu.test.service.performance.chain.biz.BizHandlerImpl;
-import com.dugu.test.service.performance.chain.biz.InitHandlerImpl;
-import com.dugu.test.service.performance.chain.biz.MessageHandlerImpl;
+import com.dugu.test.service.design.cor.perf.DocProcessChainServiceImpl;
+import com.dugu.test.service.design.cor.perf.biz.AfterHandlerImpl;
+import com.dugu.test.service.design.cor.perf.biz.BizHandlerImpl;
+import com.dugu.test.service.design.cor.perf.biz.InitHandlerImpl;
+import com.dugu.test.service.design.cor.perf.biz.MessageHandlerImpl;
 import com.dugu.test.service.performance.domain.model.ProcessCodeEnum;
 import com.dugu.test.service.performance.domain.request.DocProcessRequest;
 import com.dugu.test.service.performance.domain.response.DocProcessResponse;

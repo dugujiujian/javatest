@@ -1,7 +1,7 @@
-package com.dugu.test.service.performance.chain.biz;
+package com.dugu.test.service.design.cor.perf.biz;
 
-import com.dugu.test.service.performance.chain.PerformanceHandler;
-import com.dugu.test.service.performance.chain.PerformanceHandlerChain;
+import com.dugu.test.service.design.cor.perf.PerformanceHandler;
+import com.dugu.test.service.design.cor.perf.PerformanceHandlerChain;
 import com.dugu.test.service.performance.domain.request.DocProcessRequest;
 import com.dugu.test.service.performance.domain.response.DocProcessResponse;
 import org.springframework.stereotype.Service;

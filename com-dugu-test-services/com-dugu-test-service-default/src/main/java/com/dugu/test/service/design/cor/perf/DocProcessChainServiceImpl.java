@@ -1,4 +1,4 @@
-package com.dugu.test.service.performance.chain;
+package com.dugu.test.service.design.cor.perf;
 
 import com.dugu.test.service.performance.domain.request.DocProcessRequest;
 import com.dugu.test.service.performance.domain.response.DocProcessResponse;

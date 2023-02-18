@@ -8,7 +8,7 @@ import com.dugu.test.service.performance.message.domain.enums.DocActionEnum;
  * @author cihun
  * @date 2022-08-05 3:42 下午
  */
-public interface PfmDocMessageHandler<S,A> {
+public interface PfmDocMessageHandler<S,E> {
 
     /**
      * 消息发送
@@ -25,5 +25,5 @@ public interface PfmDocMessageHandler<S,A> {
      *
      * @return {@link DocActionEnum}
      */
-    A getDocAction();
+    E getDocAction();
 }

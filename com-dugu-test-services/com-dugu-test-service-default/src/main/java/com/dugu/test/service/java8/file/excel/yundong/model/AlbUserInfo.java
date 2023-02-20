@@ -1,7 +1,6 @@
 package com.dugu.test.service.java8.file.excel.yundong.model;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.metadata.BaseRowModel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,7 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class AlbUserInfo extends BaseRowModel {
+public class AlbUserInfo  {
 
     /**
      * 员工姓名

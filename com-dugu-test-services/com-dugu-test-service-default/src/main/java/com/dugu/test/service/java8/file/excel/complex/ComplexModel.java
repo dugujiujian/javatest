@@ -1,6 +1,5 @@
 package com.dugu.test.service.java8.file.excel.complex;
 
-import com.alibaba.excel.metadata.BaseRowModel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,5 +11,5 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ComplexModel extends BaseRowModel {
+public class ComplexModel{
 }

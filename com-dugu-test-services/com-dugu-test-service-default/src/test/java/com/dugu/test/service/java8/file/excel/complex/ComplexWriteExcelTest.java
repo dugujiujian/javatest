@@ -4,12 +4,16 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.WriteTable;
+import com.dugu.test.service.java8.file.excel.complex.model.UserScoreHeadModel;
 import junit.framework.TestCase;
+import org.apache.commons.compress.utils.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +92,7 @@ public class ComplexWriteExcelTest extends TestCase {
      */
     @Test
     public void test2() throws FileNotFoundException {
-        String fileName = "//Users/zhaohaihua/Documents/complex2.xlsx";
+        String fileName = "//Users/zhaohaihua/Documents/complex.xlsx";
         //创建ExcelWriter写入对象
         ExcelWriter excelWriter = EasyExcel.write(new FileOutputStream(fileName)).build();
 
@@ -97,127 +101,129 @@ public class ComplexWriteExcelTest extends TestCase {
         //设置第N个Sheet
         sheet.setSheetNo(1);
         //设置Sheet名称
-        sheet.setSheetName("文档2");
+        sheet.setSheetName("文档");
 
         //创建表格对象
         WriteTable table = new WriteTable();
         //设置第N个表格
         table.setTableNo(1);
 
-
         //创建表头集合
-        List<List<String>> headList = new ArrayList<List<String>>();
+        List<List<String>> headList = Lists.newArrayList();
 
-        //第N列的表头
-        List<String> headTitle1 = new ArrayList<>();
-        List<String> headTitle2 = new ArrayList<>();
-        List<String> headTitle3 = new ArrayList<>();
-        List<String> headTitle4 = new ArrayList<>();
-        List<String> headTitle5 = new ArrayList<>();
-        List<String> headTitle6 = new ArrayList<>();
-        List<String> headTitle7 = new ArrayList<>();
-        List<String> headTitle8 = new ArrayList<>();
-        List<String> headTitle9 = new ArrayList<>();
-        List<String> headTitle10 = new ArrayList<>();
-        List<String> headTitle11 = new ArrayList<>();
-        List<String> headTitle12 = new ArrayList<>();
-        List<String> headTitle13 = new ArrayList<>();
-        List<String> headTitle14 = new ArrayList<>();
-        List<String> headTitle15 = new ArrayList<>();
-        List<String> headTitle16 = new ArrayList<>();
-        List<String> headTitle17 = new ArrayList<>();
-        List<String> headTitle18 = new ArrayList<>();
-        List<String> headTitle19 = new ArrayList<>();
-        List<String> headTitle20 = new ArrayList<>();
-        List<String> headTitle21 = new ArrayList<>();
-        List<String> headTitle22 = new ArrayList<>();
-        headTitle1.add("维度");
-        //Dau
-        headTitle2.add("目标");
-        //第三列
-        headTitle3.add("权重");
-        //第四列
-        headTitle4.add("描述");
-        //第五列
-        headTitle5.add("标准");
-        //第六列
-        headTitle6.add("完成度");
-        //第七列
-        headTitle7.add("完成值");
-        //第八列
-        headTitle8.add("单位");
-        //第九列
-        headTitle9.add("完成说明");
         //===============自评==================
-        //第十列
-        headTitle10.add("自评(10%)");
-        headTitle10.add("刺魂");
-        headTitle10.add("评分");
-        //第11列
-        headTitle11.add("自评(10%)");
-        headTitle11.add("刺魂");
-        headTitle11.add("评语");
+
+        fixHeader(headList);
+        //===============自评==================
+        UserScoreHeadModel employee = new UserScoreHeadModel();
+        employee.setLabel("刺魂");
+        employeeScoreHeader(headList, employee, "10%", true, true);
         //===============同事互评==================
-        //第12列
-        headTitle12.add("同事互评");
-        headTitle12.add("刺魂（80%）");
-        headTitle12.add("评分");
-        //第13列
-        headTitle13.add("同事互评");
-        headTitle13.add("刺魂（80%）");
-        headTitle13.add("评语");
-        //第14列
-        headTitle14.add("同事互评");
-        headTitle14.add("99（20%）");
-        headTitle14.add("评分");
-        //第15列
-        headTitle15.add("同事互评");
-        headTitle15.add("99（20%）");
-        headTitle15.add("评语");
-        //===============行为-游戏==================
-        //第16列
-        headTitle16.add("上级评分");
-        headTitle16.add("刺魂(10%)");
-        headTitle16.add("评分");
-        //第17列
-        headTitle17.add("上级评分");
-        headTitle17.add("刺魂(10%)");
-        headTitle17.add("评语");
-        //第18列
-        headTitle18.add("上级评分");
-        headTitle18.add("99(90%)");
-        headTitle18.add("评分");
-        //第19列
-        headTitle19.add("上级评分");
-        headTitle19.add("99(90%)");
-        headTitle19.add("评语");
-
-
-        headList.add(headTitle1);
-        headList.add(headTitle2);
-        headList.add(headTitle3);
-        headList.add(headTitle4);
-        headList.add(headTitle5);
-        headList.add(headTitle6);
-        headList.add(headTitle7);
-        headList.add(headTitle8);
-        headList.add(headTitle9);
-        headList.add(headTitle10);
-        headList.add(headTitle11);
-        headList.add(headTitle12);
-        headList.add(headTitle13);
-        headList.add(headTitle14);
-        headList.add(headTitle15);
-        headList.add(headTitle16);
-        headList.add(headTitle17);
-        headList.add(headTitle18);
-        headList.add(headTitle19);
+        List<UserScoreHeadModel> inviteUserList = Lists.newArrayList();
+        UserScoreHeadModel userScoreHeadModel = new UserScoreHeadModel();
+        userScoreHeadModel.setLabel("刺魂");
+        userScoreHeadModel.setWeight("10%");
+        inviteUserList.add(userScoreHeadModel);
+        userScoreHeadModel = new UserScoreHeadModel();
+        userScoreHeadModel.setLabel("99");
+        userScoreHeadModel.setWeight("20%");
+        inviteUserList.add(userScoreHeadModel);
+        userScoreHeadModel = new UserScoreHeadModel();
+        userScoreHeadModel.setLabel("蛇哥");
+        userScoreHeadModel.setWeight("70%");
+        inviteUserList.add(userScoreHeadModel);
+        inviteScoreHeader(headList, inviteUserList, "20%", true, true);
+        //===============上级评分==================
+        List<UserScoreHeadModel> leaderScoreList = Lists.newArrayList();
+        UserScoreHeadModel leaderModel = new UserScoreHeadModel();
+        leaderModel.setLabel("刺魂");
+        leaderModel.setWeight("30%");
+        leaderScoreList.add(leaderModel);
+        leaderModel = new UserScoreHeadModel();
+        leaderModel.setLabel("99");
+        leaderModel.setWeight("30%");
+        leaderScoreList.add(leaderModel);
+        leaderModel = new UserScoreHeadModel();
+        leaderModel.setLabel("蛇哥");
+        leaderModel.setWeight("40%");
+        leaderScoreList.add(leaderModel);
+        leaderScoreHeader(headList, leaderScoreList, "20%", true, true);
 
         table.setHead(headList);
-        List<List<Object>> list = new ArrayList<>();
-        excelWriter.write(list, sheet, table);
-        // 记得 释放资源
+        excelWriter.write(getData(), sheet, table);
+        //  释放资源
         excelWriter.finish();
     }
 
+    private void fixHeader(List<List<String>> headerList) {
+        String fixHeader = "维度,目标,权重,描述,标准,完成度,完成值,单位,完成说明";
+        Arrays.stream(StringUtils.split(fixHeader, ","))
+                .forEach(h -> {
+                    List<String> header = Lists.newArrayList();
+                    header.add(h);
+                    headerList.add(header);
+                });
+    }
+
+    private void employeeScoreHeader(List<List<String>> headerList, UserScoreHeadModel userScoreHeadModel,
+                                     String weight, boolean showScore, boolean showComment) {
+        List<String> scoreHeader = Lists.newArrayList();
+        scoreHeader.add("自评（" + weight + "）");
+        scoreHeader.add(userScoreHeadModel.getLabel());
+        scoreHeader.add("评分");
+        List<String> commentHeader = Lists.newArrayList();
+        commentHeader.add("自评（" + weight + "）");
+        commentHeader.add(userScoreHeadModel.getLabel());
+        commentHeader.add("评语");
+        headerList.add(scoreHeader);
+        headerList.add(commentHeader);
+    }
+
+    private void inviteScoreHeader(List<List<String>> headerList, List<UserScoreHeadModel> userScoreHeadModelList,
+                                   String weight, boolean showScore, boolean showComment) {
+        userScoreHeadModelList.forEach(e -> {
+            List<String> scoreHeader = Lists.newArrayList();
+            scoreHeader.add("同事互评（" + weight + "）");
+            scoreHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
+            scoreHeader.add("评分");
+            List<String> commentHeader = Lists.newArrayList();
+            commentHeader.add("同事互评（" + weight + "）");
+            commentHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
+            commentHeader.add("评语");
+            headerList.add(scoreHeader);
+            headerList.add(commentHeader);
+        });
+    }
+
+    private void leaderScoreHeader(List<List<String>> headerList, List<UserScoreHeadModel> userScoreHeadModelList,
+                                   String weight, boolean showScore, boolean showComment) {
+        userScoreHeadModelList.forEach(e -> {
+            List<String> scoreHeader = Lists.newArrayList();
+            scoreHeader.add("上级评分（" + weight + "）");
+            scoreHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
+            scoreHeader.add("评分");
+            List<String> commentHeader = Lists.newArrayList();
+            commentHeader.add("上级评分（" + weight + "）");
+            commentHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
+            commentHeader.add("评语");
+            headerList.add(scoreHeader);
+            headerList.add(commentHeader);
+        });
+    }
+
+
+    private List<List<Object>> getData() {
+        List<List<Object>> list = new ArrayList<>();
+        List<Object> dimensionList = Lists.newArrayList();
+        dimensionList.add("维度一");
+        dimensionList.add("维度二");
+        list.add(dimensionList);
+        List<Object> objectsList = Lists.newArrayList();
+        objectsList.add("目标1");
+        objectsList.add("目标2");
+        objectsList.add("目标3");
+        objectsList.add("目标4");
+        list.add(objectsList);
+        return list;
+    }
 }

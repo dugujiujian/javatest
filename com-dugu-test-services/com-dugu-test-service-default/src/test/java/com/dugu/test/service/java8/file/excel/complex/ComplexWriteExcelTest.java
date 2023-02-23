@@ -5,6 +5,7 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.WriteTable;
 import com.dugu.test.service.java8.file.excel.complex.model.UserScoreHeadModel;
+import com.dugu.test.service.java8.file.excel.complex.strategy.CustomMergeStrategy;
 import junit.framework.TestCase;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author cihun
@@ -93,21 +95,17 @@ public class ComplexWriteExcelTest extends TestCase {
     @Test
     public void test2() throws FileNotFoundException {
         String fileName = "//Users/zhaohaihua/Documents/complex.xlsx";
-        //创建ExcelWriter写入对象
+        //创建ExcelWriter写入对象k
         ExcelWriter excelWriter = EasyExcel.write(new FileOutputStream(fileName)).build();
-
-        //创建Sheet对象
-        WriteSheet sheet = new WriteSheet();
-        //设置第N个Sheet
-        sheet.setSheetNo(1);
-        //设置Sheet名称
-        sheet.setSheetName("文档");
+        WriteSheet sheet = EasyExcel.writerSheet("文档")
+                .sheetNo(1)
+                .registerWriteHandler(new CustomMergeStrategy(mergeLine(), 0))
+                .build();
 
         //创建表格对象
         WriteTable table = new WriteTable();
         //设置第N个表格
         table.setTableNo(1);
-
         //创建表头集合
         List<List<String>> headList = Lists.newArrayList();
 
@@ -211,19 +209,35 @@ public class ComplexWriteExcelTest extends TestCase {
         });
     }
 
+    private List<String> mergeLine() {
+        return getData().stream().map(s -> s.get(0)).collect(Collectors.toList());
+    }
 
-    private List<List<Object>> getData() {
-        List<List<Object>> list = new ArrayList<>();
-        List<Object> dimensionList = Lists.newArrayList();
-        dimensionList.add("维度一");
-        dimensionList.add("维度二");
-        list.add(dimensionList);
-        List<Object> objectsList = Lists.newArrayList();
-        objectsList.add("目标1");
-        objectsList.add("目标2");
-        objectsList.add("目标3");
-        objectsList.add("目标4");
-        list.add(objectsList);
+
+    private List<List<String>> getData() {
+        List<List<String>> list = new ArrayList<>();
+        List<String> line1 = Lists.newArrayList();
+        line1.add("普通业务");
+        line1.add("测试目标");
+        line1.add("20");
+        line1.add("测试目标描述");
+        line1.add("测试目标标准");
+        line1.add("测试目标完成度");
+        line1.add("测试目标完成值");
+        line1.add("次");
+        line1.add("测试目标完成说明");
+        list.add(line1);
+        List<String> line2 = Lists.newArrayList();
+        line2.add("普通业务");
+        line2.add("测试目标2");
+        line2.add("30");
+        line2.add("测试目标描述2");
+        line2.add("测试目标标准2");
+        line2.add("测试目标完成度2");
+        line2.add("测试目标完成值2");
+        line2.add("次");
+        line2.add("测试目标完成说明2");
+        list.add(line2);
         return list;
     }
 }

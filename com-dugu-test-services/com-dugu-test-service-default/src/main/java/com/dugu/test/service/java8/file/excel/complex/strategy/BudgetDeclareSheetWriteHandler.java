@@ -3,9 +3,10 @@ package com.dugu.test.service.java8.file.excel.complex.strategy;
 import com.alibaba.excel.write.handler.SheetWriteHandler;
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
-import com.dugu.test.service.java8.file.excel.complex.model.DocExcelModel;
+import com.dugu.test.service.java8.file.excel.complex.model.DocDetailExcelModel;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
@@ -20,10 +21,10 @@ import org.apache.poi.ss.util.CellRangeAddress;
  */
 public class BudgetDeclareSheetWriteHandler implements SheetWriteHandler {
 
-    private DocExcelModel docExcelModel;
+    private DocDetailExcelModel docDetailExcelModel;
 
-    public BudgetDeclareSheetWriteHandler(DocExcelModel docExcelModel) {
-        this.docExcelModel = docExcelModel;
+    public BudgetDeclareSheetWriteHandler(DocDetailExcelModel docDetailExcelModel) {
+        this.docDetailExcelModel = docDetailExcelModel;
     }
 
     @Override
@@ -42,11 +43,11 @@ public class BudgetDeclareSheetWriteHandler implements SheetWriteHandler {
         //sheet.setColumnWidth(3, 40 * 256);
         //sheet.setColumnWidth(4, 30 * 256);
 
-        //设置标题
+        // ---标题---
         Row row1 = sheet.createRow(0);
         row1.setHeight((short) 800);
         Cell cell1 = row1.createCell(0);
-        cell1.setCellValue(docExcelModel.getPlanName());
+        cell1.setCellValue(docDetailExcelModel.getPlanName());
         CellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -58,36 +59,63 @@ public class BudgetDeclareSheetWriteHandler implements SheetWriteHandler {
         //设置其他信息的单元格样式
         CellStyle cellStyleInfo = workbook.createCellStyle();
         cellStyleInfo.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyleInfo.setAlignment(HorizontalAlignment.CENTER);
+        cellStyleInfo.setFillForegroundColor(FillPatternType.THICK_VERT_BANDS.getCode());
+
+        Font celFont = workbook.createFont();
+        celFont.setBold(true);
+        cellStyleInfo.setFont(celFont);
+
+
+        CellStyle cellValueStyleInfo = workbook.createCellStyle();
+        cellValueStyleInfo.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellValueStyleInfo.setAlignment(HorizontalAlignment.CENTER);
+        cellValueStyleInfo.setFillForegroundColor(FillPatternType.THICK_VERT_BANDS.getCode());
+
+        Font celValueFont = workbook.createFont();
+        celValueFont.setFontHeight((short) 200);
+        cellValueStyleInfo.setFont(celValueFont);
         //合并单元格
-        sheet.addMergedRegionUnsafe(new CellRangeAddress(0, 0, 0, 22));
-        //设置基本信息
+        sheet.addMergedRegionUnsafe(new CellRangeAddress(0, 0, 0, docDetailExcelModel.getCellCount()));
+
+
+        //---部门---
         Row row2 = sheet.createRow(1);
         row2.setHeight((short) 400);
         Cell cell2 = row2.createCell(0);
-        cell2.setCellValue("部门：" + docExcelModel.getDepartment());
+        cell2.setCellValue("部门");
         cell2.setCellStyle(cellStyleInfo);
-        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, 0, 1));
-        Cell cell23 = row2.createCell(21);
-        cell23.setCellValue("职位：" + docExcelModel.getPosition());
-        cell23.setCellStyle(cellStyleInfo);
-        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, 21, 22));
-
-        Row row3 = sheet.createRow(2);
-        row3.setHeight((short) 400);
-        Cell cell3 = row3.createCell(0);
-        cell3.setCellValue("总分：" + docExcelModel.getTotalScore());
+        Cell cell21 = row2.createCell(1);
+        cell21.setCellValue(docDetailExcelModel.getDepartmentPath());
+        cell21.setCellStyle(cellValueStyleInfo);
+        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, 1, 3));
+        //---姓名---
+        Cell cell3 = row2.createCell(4);
+        cell3.setCellValue("姓名");
         cell3.setCellStyle(cellStyleInfo);
-        sheet.addMergedRegionUnsafe(new CellRangeAddress(2, 2, 0, 1));
-        Cell cell33 = row3.createCell(21);
-        cell33.setCellValue("等级：" + docExcelModel.getGrade());
-        cell33.setCellStyle(cellStyleInfo);
-        sheet.addMergedRegionUnsafe(new CellRangeAddress(2, 2, 21, 22));
+        Cell cell31 = row2.createCell(5);
+        cell31.setCellValue(docDetailExcelModel.getUser().getLabel());
+        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, 5, 6));
+        //---岗位---
+        Cell cell4 = row2.createCell(7);
+        cell4.setCellValue("岗位");
+        cell4.setCellStyle(cellStyleInfo);
+        Cell cell41 = row2.createCell(8);
+        cell41.setCellValue(docDetailExcelModel.getPosition());
+        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, 8, 9));
 
-        Row row4 = sheet.createRow(3);
-        row4.setHeight((short) 400);
-        Cell cell6 = row4.createCell(0);
-        cell6.setCellValue("备注：");
+        Cell cell5 = row2.createCell(10);
+        cell5.setCellValue("直接上级");
+        cell5.setCellStyle(cellStyleInfo);
+        Cell cell51 = row2.createCell(11);
+        cell51.setCellValue(docDetailExcelModel.getLeader().getLabel());
+        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, 11, 12));
+
+        Cell cell6 = row2.createCell(docDetailExcelModel.getCellCount() - 3);
+        cell6.setCellValue("周期");
         cell6.setCellStyle(cellStyleInfo);
-        sheet.addMergedRegionUnsafe(new CellRangeAddress(3, 4, 0, 22));
+        Cell cell61 = row2.createCell(docDetailExcelModel.getCellCount() - 2);
+        cell61.setCellValue(docDetailExcelModel.getPlanCycle());
+        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, docDetailExcelModel.getCellCount() - 2, docDetailExcelModel.getCellCount()));
     }
 }

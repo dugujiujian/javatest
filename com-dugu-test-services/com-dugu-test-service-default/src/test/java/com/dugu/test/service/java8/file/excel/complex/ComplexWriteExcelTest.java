@@ -4,10 +4,11 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.WriteTable;
-import com.dugu.test.service.java8.file.excel.complex.model.DocExcelModel;
+import com.dugu.test.service.java8.file.excel.complex.model.DocDetailExcelModel;
 import com.dugu.test.service.java8.file.excel.complex.model.UserScoreHeadModel;
 import com.dugu.test.service.java8.file.excel.complex.strategy.BudgetDeclareSheetWriteHandler;
 import com.dugu.test.service.java8.file.excel.complex.strategy.CustomMergeStrategy;
+import com.dugu.test.service.performance.domain.UserSimpleDTO;
 import junit.framework.TestCase;
 import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -96,20 +97,29 @@ public class ComplexWriteExcelTest extends TestCase {
      */
     @Test
     public void test2() throws FileNotFoundException {
-        String fileName = "//Users/zhaohaihua/Documents/complex.xlsx";
-        DocExcelModel docExcelModel=new DocExcelModel();
-        docExcelModel.setPlanName("2023年Q1等级制只有价值观");
-        docExcelModel.setPosition("开发工程师");
-        docExcelModel.setDepartment("技术部");
-        docExcelModel.setTotalScore("87.5");
-        docExcelModel.setTotalValueScore("A");
-        docExcelModel.setGrade("优秀");
+        String fileName = "//Users/cihun/Documents/complex.xlsx";
+        UserSimpleDTO leader=new UserSimpleDTO();
+        leader.setLabel("003");
+        UserSimpleDTO user=new UserSimpleDTO();
+        user.setLabel("刺魂");
+        DocDetailExcelModel docDetailExcelModel =new DocDetailExcelModel();
+        docDetailExcelModel.setPlanName("2023年Q1等级制只有价值观");
+        docDetailExcelModel.setPosition("开发工程师");
+        docDetailExcelModel.setDepartmentPath("技术中心/技术部");
+        docDetailExcelModel.setCellCount(22);
+        docDetailExcelModel.setPlanCycle("2023第二季度");
+        docDetailExcelModel.setLeader(leader);
+        docDetailExcelModel.setUser(user);
+
+        docDetailExcelModel.setTotalScore("87.5");
+        docDetailExcelModel.setTotalValueScore("A");
+        docDetailExcelModel.setGrade("优秀");
         //创建ExcelWriter写入对象k
         ExcelWriter excelWriter = EasyExcel.write(new FileOutputStream(fileName)).build();
         WriteSheet sheet = EasyExcel.writerSheet("文档")
                 .sheetNo(1)
                 .registerWriteHandler(new CustomMergeStrategy(mergeLine(), 0))
-                .registerWriteHandler(new BudgetDeclareSheetWriteHandler(docExcelModel))
+                .registerWriteHandler(new BudgetDeclareSheetWriteHandler(docDetailExcelModel))
                 .relativeHeadRowIndex(5)
                 .build();
 

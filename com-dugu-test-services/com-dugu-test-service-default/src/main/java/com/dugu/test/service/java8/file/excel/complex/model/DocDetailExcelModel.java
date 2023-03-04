@@ -13,7 +13,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DocDetailExcelModel {
-
     /**
      * 计划名称
      */

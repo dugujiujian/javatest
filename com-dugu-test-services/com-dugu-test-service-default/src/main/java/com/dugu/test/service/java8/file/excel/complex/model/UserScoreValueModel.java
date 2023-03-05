@@ -1,5 +1,6 @@
 package com.dugu.test.service.java8.file.excel.complex.model;
 
+import com.dugu.test.service.performance.domain.UserSimpleDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,7 +14,8 @@ import lombok.ToString;
 @ToString
 public class UserScoreValueModel {
 
-    private String userId;
+    private UserSimpleDTO user;
     private String comment;
     private String score;
+    private String scoreValue;
 }

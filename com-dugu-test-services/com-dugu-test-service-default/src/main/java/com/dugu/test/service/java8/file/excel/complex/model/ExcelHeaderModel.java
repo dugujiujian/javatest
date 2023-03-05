@@ -13,10 +13,6 @@ import lombok.ToString;
 @ToString
 public class ExcelHeaderModel {
     /**
-     * 名称
-     */
-    private String label;
-    /**
      * 字段
      */
     private String fieldName;
@@ -24,10 +20,6 @@ public class ExcelHeaderModel {
      * 业务ID
      */
     private String bizId;
-    /**
-     * 排序
-     */
-    private Integer sort;
     /**
      * 固定部分
      */

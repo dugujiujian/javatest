@@ -9,6 +9,7 @@ import com.dugu.test.service.java8.file.excel.complex.model.DocDetailDataModel;
 import com.dugu.test.service.java8.file.excel.complex.model.DocDetailExcelModel;
 import com.dugu.test.service.java8.file.excel.complex.model.ExcelHeaderModel;
 import com.dugu.test.service.java8.file.excel.complex.model.UserScoreHeadModel;
+import com.dugu.test.service.java8.file.excel.complex.model.UserScoreValueModel;
 import com.dugu.test.service.java8.file.excel.complex.strategy.BudgetDeclareSheetWriteHandler;
 import com.dugu.test.service.java8.file.excel.complex.strategy.CustomHorizontalCellStyleStrategy;
 import com.dugu.test.service.java8.file.excel.complex.strategy.CustomMergeStrategy;
@@ -116,6 +117,7 @@ public class ComplexWriteExcelTest extends TestCase {
         leader.setLabel("003");
         UserSimpleDTO user = new UserSimpleDTO();
         user.setLabel("刺魂");
+        DocDetailExcelConfig config = config();
         //
         List<ExcelHeaderModel> headModelList = Lists.newArrayList();
         // 计划维度数据
@@ -124,8 +126,8 @@ public class ComplexWriteExcelTest extends TestCase {
         List<DocDetailDataModel> docDetailDataModelList = buildDocDetailDataModelList();
         // 创建表头集合
         List<List<String>> headList = Lists.newArrayList();
-        buildFixHead(config(), headList, headModelList);
-        buildDynamicHead(config(), docDetailExcelModel, headModelList, docDetailDataModelList);
+        buildFixHead(config, headList, headModelList);
+        buildDynamicHead(config, docDetailExcelModel, headList, headModelList, docDetailDataModelList);
 //
 //        //===============自评==================
 //        employeeScoreHeader(headList, "10%", Boolean.TRUE, Boolean.TRUE, false);
@@ -166,7 +168,7 @@ public class ComplexWriteExcelTest extends TestCase {
         table.setHead(headList);
         table.setRelativeHeadRowIndex(2);
 
-        List<List<Object>> data = getData(docDetailDataModelList, headModelList);
+        List<List<Object>> data = getData(config(), docDetailDataModelList, headModelList);
 
         //创建ExcelWriter写入对象k
         ExcelWriter excelWriter = EasyExcel.write(new FileOutputStream(fileName)).build();
@@ -215,28 +217,18 @@ public class ComplexWriteExcelTest extends TestCase {
         docDetailDataModel1.setTargetValue("2");
         docDetailDataModel1.setChargeValue("4");
 
+        //自评
+        UserScoreValueModel employeeScore = new UserScoreValueModel();
+        employeeScore.setScore("10.1");
+        employeeScore.setComment("我自我感觉良好");
+        docDetailDataModel1.setEmployeeScore(employeeScore);
+
+
         docDetailDataModelList.add(docDetailDataModel1);
 
         return docDetailDataModelList;
     }
 
-
-    private void employeeScoreHeader(List<List<String>> headerList, String weight, boolean showEmployeeScore, boolean showScore, boolean showComment) {
-
-        if (showEmployeeScore && showScore) {
-            List<String> scoreHeader = Lists.newArrayList();
-            scoreHeader.add("自评（" + weight + "）");
-            scoreHeader.add("评分");
-            headerList.add(scoreHeader);
-        }
-        if (showEmployeeScore && showComment) {
-            List<String> commentHeader = Lists.newArrayList();
-            commentHeader.add("自评（" + weight + "）");
-            commentHeader.add("评语");
-            headerList.add(commentHeader);
-        }
-
-    }
 
     private void inviteScoreHeader(List<List<String>> headerList, List<UserScoreHeadModel> userScoreHeadModelList,
                                    String weight, boolean showScore, boolean showComment) {
@@ -274,38 +266,6 @@ public class ComplexWriteExcelTest extends TestCase {
         return data.stream().map(s -> s.get(0).toString()).collect(Collectors.toList());
     }
 
-
-    private List<List<Object>> getData(List<DocDetailDataModel> docDetailDataModelList, List<ExcelHeaderModel> headerModelList) {
-        List<List<Object>> list = Lists.newArrayList();
-        if (CollectionUtils.isNotEmpty(docDetailDataModelList)) {
-            getExportListData(list, docDetailDataModelList, headerModelList);
-        }
-        return list;
-    }
-
-
-    public void getExportListData(List<List<Object>> listData, List<DocDetailDataModel> list, List<ExcelHeaderModel> headerModelList) {
-        if (CollectionUtils.isEmpty(list)) {
-            return;
-        }
-        try {
-            for (DocDetailDataModel t : list) {
-                List<Object> rowLine = new ArrayList<>();
-                for (ExcelHeaderModel s : headerModelList) {
-                    String getMethodName = "get" + s.getFieldName().substring(0, 1).toUpperCase() + s.getFieldName().substring(1);
-                    Class clazz = t.getClass();
-                    Method getMethod;
-                    getMethod = clazz.getMethod(getMethodName, new Class[]{});
-                    Object value = getMethod.invoke(t, new Object[]{});
-                    rowLine.add(value);
-                }
-                listData.add(rowLine);
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
     /**
      * 固定部分
      * <pre>
@@ -326,7 +286,6 @@ public class ComplexWriteExcelTest extends TestCase {
         fixedField = "维度,目标,描述,标准," + fixedField;
         List<ExcelHeaderModel> modelList = Arrays.stream(fixedField.split(",")).map(e -> {
             ExcelHeaderModel excelHeaderModel = new ExcelHeaderModel();
-            excelHeaderModel.setLabel(e);
             excelHeaderModel.setFieldName(ExcelFieldUtil.getNameFieldByName(e));
             excelHeaderModel.setFixed(Boolean.TRUE);
             return excelHeaderModel;
@@ -343,8 +302,83 @@ public class ComplexWriteExcelTest extends TestCase {
 
     private void buildDynamicHead(DocDetailExcelConfig config,
                                   DocDetailExcelModel docDetailExcelModel,
+                                  List<List<String>> headerList,
                                   List<ExcelHeaderModel> headModelList,
                                   List<DocDetailDataModel> docDetailDataModelList) {
+        if (StringUtils.isNotEmpty(docDetailExcelModel.getEmployeeWeight())) {
+            Boolean showComment = config.getShowComment() == null ? Boolean.FALSE : config.getShowComment();
+            employeeScoreHeader(headerList, docDetailExcelModel.getEmployeeWeight(), Boolean.TRUE, showComment);
+            ExcelHeaderModel excelHeaderModel = new ExcelHeaderModel();
+            excelHeaderModel.setFixed(Boolean.FALSE);
+            excelHeaderModel.setFieldName(ExcelFieldUtil.VALUE_EMPLOYEE_SCORE);
+            headModelList.add(excelHeaderModel);
+        }
+    }
+
+
+    private List<List<Object>> getData(DocDetailExcelConfig config,
+                                       List<DocDetailDataModel> docDetailDataModelList,
+                                       List<ExcelHeaderModel> headerModelList) {
+        List<List<Object>> list = Lists.newArrayList();
+        if (CollectionUtils.isNotEmpty(docDetailDataModelList)) {
+            getExportListData(config, list, docDetailDataModelList, headerModelList);
+        }
+        return list;
+    }
+
+
+    public void getExportListData(DocDetailExcelConfig config,
+                                  List<List<Object>> listData,
+                                  List<DocDetailDataModel> list,
+                                  List<ExcelHeaderModel> headerModelList) {
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+        try {
+            for (DocDetailDataModel t : list) {
+                List<Object> rowLine = new ArrayList<>();
+                for (ExcelHeaderModel s : headerModelList) {
+                    String getMethodName = "get" + s.getFieldName().substring(0, 1).toUpperCase() + s.getFieldName().substring(1);
+                    Class clazz = t.getClass();
+                    Method getMethod;
+                    getMethod = clazz.getMethod(getMethodName, new Class[]{});
+                    if (ExcelFieldUtil.VALUE_EMPLOYEE_SCORE.equals(s.getFieldName())) {
+                        UserScoreValueModel value = (UserScoreValueModel) getMethod.invoke(t, new Object[]{});
+                        if (value != null) {
+                            rowLine.add(value.getScore());
+                            if (config.getShowComment() != null && config.getShowComment()) {
+                                rowLine.add(value.getComment());
+                            }
+                        }
+                    } else {
+                        Object value = getMethod.invoke(t, new Object[]{});
+                        rowLine.add(value);
+                    }
+
+
+                }
+                listData.add(rowLine);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+
+    private void employeeScoreHeader(List<List<String>> headerList, String weight, boolean showScore, boolean showComment) {
+
+        if (showScore) {
+            List<String> scoreHeader = Lists.newArrayList();
+            scoreHeader.add("自评（" + weight + "%）");
+            scoreHeader.add("评分");
+            headerList.add(scoreHeader);
+        }
+        if (showComment) {
+            List<String> commentHeader = Lists.newArrayList();
+            commentHeader.add("自评（" + weight + "%）");
+            commentHeader.add("评语");
+            headerList.add(commentHeader);
+        }
 
     }
 

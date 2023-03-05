@@ -49,7 +49,6 @@ public class DocDetailExcelModel {
      * 价值观
      */
     private String totalValueScore;
-
     /**
      * 等级
      */
@@ -59,13 +58,18 @@ public class DocDetailExcelModel {
      * 总cell总数
      */
     private Integer cellCount;
-
+    /**
+     * 自评权重
+     */
     private String employeeWeight;
-
+    /**
+     * 邀评权重
+     */
     private String inviteWeight;
-
+    /**
+     * 上级评分权重
+     */
     private String leaderScoreWeight;
-
 
 
 }

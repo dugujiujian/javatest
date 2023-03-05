@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class ExcelFieldUtil {
 
+    public final static String VALUE_EMPLOYEE_SCORE = "employeeScore";
     public static Map<String, String> DOC_NAME_FIELD_MAP = Maps.newHashMap();
     public static Map<String, String> DOC_FIELD_NAME_MAP = Maps.newHashMap();
 
@@ -32,6 +33,11 @@ public class ExcelFieldUtil {
         DOC_NAME_FIELD_MAP.put("同事互评合计", "objectInviteTotal");
         DOC_NAME_FIELD_MAP.put("上级评分合计", "objectLeaderTotal");
         DOC_NAME_FIELD_MAP.put("目标合计", "objectTotalScore");
+
+        DOC_NAME_FIELD_MAP.put("自评评分", VALUE_EMPLOYEE_SCORE);
+        DOC_NAME_FIELD_MAP.put("同事互评评分", "inviteScoreList");
+        DOC_NAME_FIELD_MAP.put("上级评分", "leaderScoreList");
+
 
         DOC_FIELD_NAME_MAP.put("dimensionName", "维度");
         DOC_FIELD_NAME_MAP.put("objectName", "目标");

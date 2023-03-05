@@ -17,11 +17,21 @@ public class ExcelHeaderModel {
      */
     private String label;
     /**
-     * 字段名称
+     * 字段
      */
     private String fieldName;
+    /**
+     * 业务ID
+     */
+    private String bizId;
     /**
      * 排序
      */
     private Integer sort;
+    /**
+     * 固定部分
+     */
+    private Boolean fixed;
+
+
 }

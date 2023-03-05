@@ -12,4 +12,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public class UserScoreValueModel {
+
+    private String userId;
+    private String comment;
+    private String score;
 }

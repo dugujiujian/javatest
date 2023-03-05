@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
+ * 文档详情头部信息模型
+ *
  * @author cihun
  * @date 2023-02-23 11:25 下午
  */
@@ -57,4 +59,13 @@ public class DocDetailExcelModel {
      * 总cell总数
      */
     private Integer cellCount;
+
+    private String employeeWeight;
+
+    private String inviteWeight;
+
+    private String leaderScoreWeight;
+
+
+
 }

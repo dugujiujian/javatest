@@ -8,11 +8,10 @@ import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy
 import com.dugu.test.service.java8.file.excel.complex.model.DocDetailDataModel;
 import com.dugu.test.service.java8.file.excel.complex.model.DocDetailExcelModel;
 import com.dugu.test.service.java8.file.excel.complex.model.ExcelHeaderModel;
-import com.dugu.test.service.java8.file.excel.complex.model.UserScoreHeadModel;
 import com.dugu.test.service.java8.file.excel.complex.model.UserScoreValueModel;
 import com.dugu.test.service.java8.file.excel.complex.strategy.BudgetDeclareSheetWriteHandler;
-import com.dugu.test.service.java8.file.excel.complex.strategy.CustomHorizontalCellStyleStrategy;
 import com.dugu.test.service.java8.file.excel.complex.strategy.CustomMergeStrategy;
+import com.dugu.test.service.java8.file.excel.complex.strategy.SummarySheetWriteHandler;
 import com.dugu.test.service.performance.domain.UserSimpleDTO;
 import junit.framework.TestCase;
 import org.apache.commons.collections4.CollectionUtils;
@@ -106,19 +105,18 @@ public class ComplexWriteExcelTest extends TestCase {
     public void testDynamicHeader() throws FileNotFoundException {
         String fileName = "//Users/zhaohaihua/Documents/complex.xlsx";
 
-
         //创建表格对象
         WriteTable table = new WriteTable();
         //设置第N个表格
         table.setTableNo(1);
-
-        //------
+//        table.setNeedHead(false);
+        //------ 原文档主管及其自己
         UserSimpleDTO leader = new UserSimpleDTO();
         leader.setLabel("003");
         UserSimpleDTO user = new UserSimpleDTO();
         user.setLabel("刺魂");
         DocDetailExcelConfig config = config();
-        //
+        //头部字段数据映射模型
         List<ExcelHeaderModel> headModelList = Lists.newArrayList();
         // 计划维度数据
         DocDetailExcelModel docDetailExcelModel = buildDocDetailExcelModel(leader, user);
@@ -126,62 +124,42 @@ public class ComplexWriteExcelTest extends TestCase {
         List<DocDetailDataModel> docDetailDataModelList = buildDocDetailDataModelList();
         // 创建表头集合
         List<List<String>> headList = Lists.newArrayList();
+        //固定头部
         buildFixHead(config, headList, headModelList);
+        // 动态头部
         buildDynamicHead(config, docDetailExcelModel, headList, headModelList, docDetailDataModelList);
-//
-//        //===============自评==================
-//        employeeScoreHeader(headList, "10%", Boolean.TRUE, Boolean.TRUE, false);
-//        //===============同事互评==================
-//        List<UserScoreHeadModel> inviteUserList = Lists.newArrayList();
-//        UserScoreHeadModel userScoreHeadModel = new UserScoreHeadModel();
-//        userScoreHeadModel.setLabel("刺魂");
-//        userScoreHeadModel.setWeight("10%");
-//        inviteUserList.add(userScoreHeadModel);
-//        userScoreHeadModel = new UserScoreHeadModel();
-//        userScoreHeadModel.setLabel("99");
-//        userScoreHeadModel.setWeight("20%");
-//        inviteUserList.add(userScoreHeadModel);
-//        userScoreHeadModel = new UserScoreHeadModel();
-//        userScoreHeadModel.setLabel("蛇哥");
-//        userScoreHeadModel.setWeight("70%");
-//        inviteUserList.add(userScoreHeadModel);
-//        inviteScoreHeader(headList, inviteUserList, "20%", true, true);
-//        //===============上级评分==================
-//        List<UserScoreHeadModel> leaderScoreList = Lists.newArrayList();
-//        UserScoreHeadModel leaderModel = new UserScoreHeadModel();
-//        leaderModel.setLabel("刺魂");
-//        leaderModel.setWeight("30%");
-//        leaderScoreList.add(leaderModel);
-//        leaderModel = new UserScoreHeadModel();
-//        leaderModel.setLabel("99");
-//        leaderModel.setWeight("30%");
-//        leaderScoreList.add(leaderModel);
-//        leaderModel = new UserScoreHeadModel();
-//        leaderModel.setLabel("蛇哥");
-//        leaderModel.setWeight("40%");
-//        leaderScoreList.add(leaderModel);
-//        leaderScoreHeader(headList, leaderScoreList, "20%", true, true);
 
-
+        // head列数
         docDetailExcelModel.setCellCount(headList.size());
-
+        // head新消息
         table.setHead(headList);
+        // 从第几行开始写列表数据
         table.setRelativeHeadRowIndex(2);
-
+        // 获取导出数据
         List<List<Object>> data = getData(config(), docDetailDataModelList, headModelList);
-
+        docDetailExcelModel.setDataSize(data.size());
         //创建ExcelWriter写入对象k
         ExcelWriter excelWriter = EasyExcel.write(new FileOutputStream(fileName)).build();
         WriteSheet sheet = EasyExcel.writerSheet(docDetailExcelModel.getPlanName())
                 .sheetNo(1)
+                .relativeHeadRowIndex(2)
                 .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
                 .registerWriteHandler(new CustomMergeStrategy(mergeLine(data), 0))
+                .registerWriteHandler(new CustomMergeStrategy(mergeLine(data), 1))
+                .registerWriteHandler(new CustomMergeStrategy(mergeLine(data), 2))
                 .registerWriteHandler(new BudgetDeclareSheetWriteHandler(docDetailExcelModel))
-                .registerWriteHandler(CustomHorizontalCellStyleStrategy.getHorizontalCellStyleStrategy())
-                .relativeHeadRowIndex(2)
                 .build();
         sheet.setHead(headList);
         excelWriter.write(data, sheet);
+
+        WriteTable table2 = new WriteTable();
+        //设置第N个表格
+        table2.setTableNo(2);
+        table2.setNeedHead(false);
+        docDetailExcelModel.setLeaderScoreList(docDetailDataModelList.get(0).getLeaderScoreList());
+        table2.setCustomWriteHandlerList(Collections.singletonList(new SummarySheetWriteHandler(docDetailExcelModel)));
+        excelWriter.write(Lists.newArrayList(), sheet, table2);
+
         //  释放资源
         excelWriter.finish();
     }
@@ -201,6 +179,10 @@ public class ComplexWriteExcelTest extends TestCase {
         docDetailExcelModel.setEmployeeWeight("10");
         docDetailExcelModel.setInviteWeight("20");
         docDetailExcelModel.setLeaderScoreWeight("70");
+        //
+        docDetailExcelModel.setEmployeeScore("99.1");
+
+
         return docDetailExcelModel;
     }
 
@@ -216,6 +198,7 @@ public class ComplexWriteExcelTest extends TestCase {
         docDetailDataModel1.setWeight("20");
         docDetailDataModel1.setTargetValue("2");
         docDetailDataModel1.setChargeValue("4");
+        docDetailDataModel1.setObjectEmployeeTotal("10.1");
 
         //自评
         UserScoreValueModel employeeScore = new UserScoreValueModel();
@@ -223,44 +206,80 @@ public class ComplexWriteExcelTest extends TestCase {
         employeeScore.setComment("我自我感觉良好");
         docDetailDataModel1.setEmployeeScore(employeeScore);
 
+        // 上级评分
+        List<UserScoreValueModel> leaderScoreList = Lists.newArrayList();
+        UserSimpleDTO leader = new UserSimpleDTO();
+        leader.setLabel("003");
+        UserSimpleDTO leader2 = new UserSimpleDTO();
+        leader2.setLabel("99");
+        UserScoreValueModel leaderScore = new UserScoreValueModel();
+        leaderScore.setScore("92");
+        leaderScore.setComment("自定义主管评分1");
+        leaderScore.setUser(leader);
+        leaderScore.setWeight("20");
+        leaderScoreList.add(leaderScore);
+
+        leaderScore = new UserScoreValueModel();
+        leaderScore.setScore("99");
+        leaderScore.setComment("自定义主管评分2");
+        leaderScore.setUser(leader2);
+        leaderScore.setWeight("80");
+        leaderScoreList.add(leaderScore);
+
+        docDetailDataModel1.setLeaderScoreList(leaderScoreList);
+        docDetailDataModel1.setObjectLeaderTotal("93.2");
+        docDetailDataModel1.setObjectTotalScore("62");
 
         docDetailDataModelList.add(docDetailDataModel1);
+
+
+        // 目标2
+
+        DocDetailDataModel docDetailDataModel2 = new DocDetailDataModel();
+        docDetailDataModel2.setDimensionName("业务维度");
+        docDetailDataModel2.setDimensionWeight("25");
+        docDetailDataModel2.setUpperLimit("100");
+        docDetailDataModel2.setObjectName("提高技术生产力建议");
+        docDetailDataModel2.setDesc("在一定时间提升声称里效率");
+        docDetailDataModel2.setStandard(null);
+        docDetailDataModel2.setWeight("80");
+        docDetailDataModel2.setTargetValue("10");
+        docDetailDataModel2.setChargeValue("10");
+        docDetailDataModel2.setUnit("万元");
+        docDetailDataModel2.setObjectEmployeeTotal("10.1");
+
+        //自评
+        UserScoreValueModel employeeScore2 = new UserScoreValueModel();
+        employeeScore2.setScore("92.1");
+        employeeScore2.setComment("");
+        docDetailDataModel2.setEmployeeScore(employeeScore2);
+
+        // 上级评分
+        List<UserScoreValueModel> leaderScoreList2 = Lists.newArrayList();
+        UserScoreValueModel leaderScore2 = new UserScoreValueModel();
+        leaderScore2.setScore("19");
+        leaderScore2.setComment("自定义主管评分11");
+        leaderScore2.setUser(leader);
+        leaderScore2.setWeight("20");
+        leaderScoreList2.add(leaderScore2);
+
+        leaderScore2 = new UserScoreValueModel();
+        leaderScore2.setScore("98");
+        leaderScore2.setComment("自定义主管评分21");
+        leaderScore2.setUser(leader2);
+        leaderScore2.setWeight("80");
+        leaderScoreList2.add(leaderScore2);
+
+        docDetailDataModel2.setLeaderScoreList(leaderScoreList2);
+        docDetailDataModel2.setObjectLeaderTotal("82.00");
+        docDetailDataModel2.setObjectTotalScore("92.00");
+
+        docDetailDataModelList.add(docDetailDataModel2);
+
 
         return docDetailDataModelList;
     }
 
-
-    private void inviteScoreHeader(List<List<String>> headerList, List<UserScoreHeadModel> userScoreHeadModelList,
-                                   String weight, boolean showScore, boolean showComment) {
-        userScoreHeadModelList.forEach(e -> {
-            List<String> scoreHeader = Lists.newArrayList();
-            scoreHeader.add("同事互评（" + weight + "）");
-            scoreHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
-            scoreHeader.add("评分");
-            List<String> commentHeader = Lists.newArrayList();
-            commentHeader.add("同事互评（" + weight + "）");
-            commentHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
-            commentHeader.add("评语");
-            headerList.add(scoreHeader);
-            headerList.add(commentHeader);
-        });
-    }
-
-    private void leaderScoreHeader(List<List<String>> headerList, List<UserScoreHeadModel> userScoreHeadModelList,
-                                   String weight, boolean showScore, boolean showComment) {
-        userScoreHeadModelList.forEach(e -> {
-            List<String> scoreHeader = Lists.newArrayList();
-            scoreHeader.add("上级评分（" + weight + "）");
-            scoreHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
-            scoreHeader.add("评分");
-            List<String> commentHeader = Lists.newArrayList();
-            commentHeader.add("上级评分（" + weight + "）");
-            commentHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
-            commentHeader.add("评语");
-            headerList.add(scoreHeader);
-            headerList.add(commentHeader);
-        });
-    }
 
     private List<String> mergeLine(List<List<Object>> data) {
         return data.stream().map(s -> s.get(0).toString()).collect(Collectors.toList());
@@ -279,11 +298,11 @@ public class ComplexWriteExcelTest extends TestCase {
         // 信息部分，维度权重和上下限制，写到维度里
         String fixedField;
         if (config == null || StringUtils.isEmpty(config.getHead())) {
-            fixedField = "完成说明,完成度,完成值,单位,权重";
+            fixedField = "完成说明,完成度,完成值,单位,权重(%)";
         } else {
             fixedField = config.getHead();
         }
-        fixedField = "维度,目标,描述,标准," + fixedField;
+        fixedField = "维度,维度权重(%),分数上限,目标,描述,标准," + fixedField;
         List<ExcelHeaderModel> modelList = Arrays.stream(fixedField.split(",")).map(e -> {
             ExcelHeaderModel excelHeaderModel = new ExcelHeaderModel();
             excelHeaderModel.setFieldName(ExcelFieldUtil.getNameFieldByName(e));
@@ -305,14 +324,117 @@ public class ComplexWriteExcelTest extends TestCase {
                                   List<List<String>> headerList,
                                   List<ExcelHeaderModel> headModelList,
                                   List<DocDetailDataModel> docDetailDataModelList) {
+        // 自评
         if (StringUtils.isNotEmpty(docDetailExcelModel.getEmployeeWeight())) {
-            Boolean showComment = config.getShowComment() == null ? Boolean.FALSE : config.getShowComment();
-            employeeScoreHeader(headerList, docDetailExcelModel.getEmployeeWeight(), Boolean.TRUE, showComment);
+            employeeScoreHeader(config, headModelList, headerList, docDetailExcelModel.getEmployeeWeight());
+        }
+        // 上级评分
+        if (StringUtils.isNotEmpty(docDetailExcelModel.getLeaderScoreWeight())) {
+            leaderScoreHeader(config, docDetailDataModelList, headModelList, headerList, docDetailExcelModel.getLeaderScoreWeight());
+        }
+        if (config.getShowTotal() == null || config.getShowTotal()) {
+            // 目标合计
+            List<String> objectTotalHeader = Lists.newArrayList();
+            objectTotalHeader.add(ExcelFieldUtil.NAME_OBJECT_TOTAL_SCORE);
+            headerList.add(objectTotalHeader);
             ExcelHeaderModel excelHeaderModel = new ExcelHeaderModel();
             excelHeaderModel.setFixed(Boolean.FALSE);
-            excelHeaderModel.setFieldName(ExcelFieldUtil.VALUE_EMPLOYEE_SCORE);
+            excelHeaderModel.setFieldName(ExcelFieldUtil.VALUE_OBJECT_TOTAL_SCORE);
             headModelList.add(excelHeaderModel);
         }
+    }
+
+    private void employeeScoreHeader(DocDetailExcelConfig config,
+                                     List<ExcelHeaderModel> headModelList,
+                                     List<List<String>> headerList,
+                                     String weight) {
+
+        ExcelHeaderModel excelHeaderModel = new ExcelHeaderModel();
+        excelHeaderModel.setFixed(Boolean.FALSE);
+        excelHeaderModel.setFieldName(ExcelFieldUtil.VALUE_EMPLOYEE_SCORE);
+        headModelList.add(excelHeaderModel);
+
+        List<String> scoreHeader = Lists.newArrayList();
+        scoreHeader.add("自评（" + weight + "%）");
+        scoreHeader.add(ExcelFieldUtil.NAME_SCORE);
+        headerList.add(scoreHeader);
+
+        if (config.getShowComment() == null || config.getShowComment()) {
+            List<String> commentHeader = Lists.newArrayList();
+            commentHeader.add("自评（" + weight + "%）");
+            commentHeader.add(ExcelFieldUtil.NAME_COMMENT);
+            headerList.add(commentHeader);
+        }
+        if (config.getShowTotal() == null || config.getShowTotal()) {
+            List<String> commentHeader = Lists.newArrayList();
+            commentHeader.add(ExcelFieldUtil.NAME_OBJECT_EMPLOYEE_TOTAL);
+            headerList.add(commentHeader);
+            excelHeaderModel = new ExcelHeaderModel();
+            excelHeaderModel.setFixed(Boolean.FALSE);
+            excelHeaderModel.setFieldName(ExcelFieldUtil.VALUE_OBJECT_EMPLOYEE_TOTAL);
+            headModelList.add(excelHeaderModel);
+        }
+    }
+
+    private void inviteScoreHeader(DocDetailExcelConfig config,
+                                   List<DocDetailDataModel> docDetailDataModelList,
+                                   List<ExcelHeaderModel> headModelList,
+                                   List<List<String>> headerList,
+                                   String weight) {
+//        userScoreHeadModelList.forEach(e -> {
+//            List<String> scoreHeader = Lists.newArrayList();
+//            scoreHeader.add("同事互评（" + weight + "）");
+//            scoreHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
+//            scoreHeader.add("评分");
+//            List<String> commentHeader = Lists.newArrayList();
+//            commentHeader.add("同事互评（" + weight + "）");
+//            commentHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
+//            commentHeader.add("评语");
+//            headerList.add(scoreHeader);
+//            headerList.add(commentHeader);
+//        });
+    }
+
+
+    private void leaderScoreHeader(DocDetailExcelConfig config,
+                                   List<DocDetailDataModel> docDetailDataModelList,
+                                   List<ExcelHeaderModel> headModelList,
+                                   List<List<String>> headerList, String weight) {
+        if (CollectionUtils.isNotEmpty(docDetailDataModelList)) {
+            ExcelHeaderModel excelHeaderModel = new ExcelHeaderModel();
+            excelHeaderModel.setFixed(Boolean.FALSE);
+            excelHeaderModel.setFieldName(ExcelFieldUtil.VALUE_LEADER_SCORE);
+            headModelList.add(excelHeaderModel);
+            DocDetailDataModel docDetailDataModel = docDetailDataModelList.get(0);
+            List<UserScoreValueModel> userScoreValueModels = docDetailDataModel.getLeaderScoreList();
+            if (CollectionUtils.isNotEmpty(userScoreValueModels)) {
+                userScoreValueModels.forEach(e -> {
+                    List<String> scoreHeader = Lists.newArrayList();
+                    scoreHeader.add("上级评分（" + weight + "%）");
+                    scoreHeader.add(e.getUser().getLabel() + "（" + e.getWeight() + "%)");
+                    scoreHeader.add(ExcelFieldUtil.NAME_SCORE);
+                    headerList.add(scoreHeader);
+                    if (config.getShowComment() == null || config.getShowComment()) {
+                        List<String> commentHeader = Lists.newArrayList();
+                        commentHeader.add("上级评分（" + weight + "%）");
+                        commentHeader.add(e.getUser().getLabel() + "（" + e.getWeight() + "%)");
+                        commentHeader.add(ExcelFieldUtil.NAME_COMMENT);
+                        headerList.add(commentHeader);
+                    }
+                });
+                if (config.getShowTotal() == null || config.getShowTotal()) {
+                    List<String> commentHeader = Lists.newArrayList();
+                    commentHeader.add(ExcelFieldUtil.NAME_OBJECT_LEADER_SCORE);
+                    headerList.add(commentHeader);
+                    excelHeaderModel = new ExcelHeaderModel();
+                    excelHeaderModel.setFixed(Boolean.FALSE);
+                    excelHeaderModel.setFieldName(ExcelFieldUtil.VALUE_OBJECT_LEADER_SCORE);
+                    headModelList.add(excelHeaderModel);
+                }
+
+            }
+        }
+
     }
 
 
@@ -350,6 +472,16 @@ public class ComplexWriteExcelTest extends TestCase {
                                 rowLine.add(value.getComment());
                             }
                         }
+                    } else if (ExcelFieldUtil.VALUE_LEADER_SCORE.equals(s.getFieldName())) {
+                        List<UserScoreValueModel> value = (List<UserScoreValueModel>) getMethod.invoke(t, new Object[]{});
+                        if (CollectionUtils.isNotEmpty(value)) {
+                            value.forEach(e -> {
+                                rowLine.add(e.getScore());
+                                if (config.getShowComment() != null && config.getShowComment()) {
+                                    rowLine.add(e.getComment());
+                                }
+                            });
+                        }
                     } else {
                         Object value = getMethod.invoke(t, new Object[]{});
                         rowLine.add(value);
@@ -365,27 +497,11 @@ public class ComplexWriteExcelTest extends TestCase {
     }
 
 
-    private void employeeScoreHeader(List<List<String>> headerList, String weight, boolean showScore, boolean showComment) {
-
-        if (showScore) {
-            List<String> scoreHeader = Lists.newArrayList();
-            scoreHeader.add("自评（" + weight + "%）");
-            scoreHeader.add("评分");
-            headerList.add(scoreHeader);
-        }
-        if (showComment) {
-            List<String> commentHeader = Lists.newArrayList();
-            commentHeader.add("自评（" + weight + "%）");
-            commentHeader.add("评语");
-            headerList.add(commentHeader);
-        }
-
-    }
-
     private DocDetailExcelConfig config() {
         DocDetailExcelConfig config = new DocDetailExcelConfig();
-        config.setHead("目标值,完成值,权重");
+        config.setHead("目标值,完成值,权重(%)");
         config.setShowComment(false);
+        config.setShowTotal(true);
         return config;
     }
 

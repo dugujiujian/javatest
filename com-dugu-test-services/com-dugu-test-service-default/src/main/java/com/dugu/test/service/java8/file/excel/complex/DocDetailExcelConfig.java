@@ -20,5 +20,11 @@ public class DocDetailExcelConfig {
      * 是否显示评语
      */
     private Boolean showComment;
+    /**
+     * 是否显示合计
+     */
+    private Boolean showTotal;
+
+
 
 }

@@ -18,4 +18,5 @@ public class UserScoreValueModel {
     private String comment;
     private String score;
     private String scoreValue;
+    private String weight;
 }

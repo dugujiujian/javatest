@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * 文档详情头部信息模型
  *
@@ -58,6 +60,11 @@ public class DocDetailExcelModel {
      * 总cell总数
      */
     private Integer cellCount;
+
+    /**
+     * 总cell总数
+     */
+    private Integer dataSize;
     /**
      * 自评权重
      */
@@ -70,6 +77,32 @@ public class DocDetailExcelModel {
      * 上级评分权重
      */
     private String leaderScoreWeight;
+
+    /**
+     * 自评总分
+     */
+    private String employeeScore;
+    /**
+     * 自评价值观
+     */
+    private String employeeValueScore;
+
+    /**
+     * 同事互评评分
+     */
+    private String inviteScore;
+    /**
+     * 上级评分
+     */
+    private String leaderScore;
+    /**
+     * 自评价值观
+     */
+    private String leaderValueScore;
+    /**
+     * 上级评分
+     */
+    private List<UserScoreValueModel> leaderScoreList;
 
 
 }

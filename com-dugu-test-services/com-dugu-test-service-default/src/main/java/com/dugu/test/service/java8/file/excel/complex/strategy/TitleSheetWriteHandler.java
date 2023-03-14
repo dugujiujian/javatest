@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.RegionUtil;
 
 /**
  * 标题
@@ -47,7 +48,7 @@ public class TitleSheetWriteHandler implements SheetWriteHandler {
         cell1.setCellValue(docDetailExcelModel.getPlanName());
         CellStyle cellStyle = workbook.createCellStyle();
         setAlignCenter(cellStyle);
-        setFont(workbook, cellStyle, 400);
+        setFont(workbook, cellStyle, 12,true);
         cell1.setCellStyle(cellStyle);
 
         //设置其他信息的单元格样式
@@ -55,12 +56,12 @@ public class TitleSheetWriteHandler implements SheetWriteHandler {
         setAlignCenter(cellStyleInfo);
         setBg(cellStyleInfo);
         setBorderStyle(cellStyleInfo);
-        setFont(workbook, cellStyleInfo, 200);
+        setFont(workbook, cellStyleInfo, 12,true);
 
         CellStyle cellValueStyleInfo = workbook.createCellStyle();
         setAlignCenter(cellValueStyleInfo);
         setBorderStyle(cellValueStyleInfo);
-        setFont(workbook, cellValueStyleInfo, 200);
+        setFont(workbook, cellValueStyleInfo, 11,false);
 
         sheet.addMergedRegionUnsafe(new CellRangeAddress(0, 0, 0, docDetailExcelModel.getCellCount() - 1));
 
@@ -73,31 +74,45 @@ public class TitleSheetWriteHandler implements SheetWriteHandler {
         Cell cell21 = row.createCell(1);
         cell21.setCellValue(docDetailExcelModel.getDepartmentPath());
         cell21.setCellStyle(cellValueStyleInfo);
-        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, 1, 2));
+
+        CellRangeAddress cellRangeAddress1= new CellRangeAddress(1, 1, 1, 3);
+        sheet.addMergedRegionUnsafe(cellRangeAddress1);
+        setRegion(sheet,cellRangeAddress1);
+
         //---姓名---
-        Cell cell3 = row.createCell(3);
+        Cell cell3 = row.createCell(4);
         cell3.setCellValue("姓名");
         cell3.setCellStyle(cellStyleInfo);
-        Cell cell31 = row.createCell(4);
+        Cell cell31 = row.createCell(5);
         cell31.setCellValue(docDetailExcelModel.getUser().getLabel());
         cell31.setCellStyle(cellValueStyleInfo);
-        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, 4, 5));
+
+        CellRangeAddress cellRangeAddress2= new CellRangeAddress(1, 1, 5, 6);
+        sheet.addMergedRegionUnsafe(cellRangeAddress2);
+        setRegion(sheet,cellRangeAddress2);
+
         //---岗位---
-        Cell cell4 = row.createCell(6);
+        Cell cell4 = row.createCell(7);
         cell4.setCellValue("岗位");
         cell4.setCellStyle(cellStyleInfo);
-        Cell cell41 = row.createCell(7);
+        Cell cell41 = row.createCell(8);
         cell41.setCellValue(docDetailExcelModel.getPosition());
         cell41.setCellStyle(cellValueStyleInfo);
-        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, 7, 8));
 
-        Cell cell5 = row.createCell(9);
+        CellRangeAddress cellRangeAddress3= new CellRangeAddress(1, 1, 8, 9);
+        sheet.addMergedRegionUnsafe(cellRangeAddress3);
+        setRegion(sheet,cellRangeAddress3);
+
+        Cell cell5 = row.createCell(10);
         cell5.setCellValue("主管");
         cell5.setCellStyle(cellStyleInfo);
-        Cell cell51 = row.createCell(10);
+        Cell cell51 = row.createCell(11);
         cell51.setCellValue(docDetailExcelModel.getLeader().getLabel());
         cell51.setCellStyle(cellValueStyleInfo);
-        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, 10, 11));
+
+        CellRangeAddress cellRangeAddress4= new CellRangeAddress(1, 1, 11, docDetailExcelModel.getCellCount() - 4);
+        sheet.addMergedRegionUnsafe(cellRangeAddress4);
+        setRegion(sheet,cellRangeAddress4);
 
         Cell cell6 = row.createCell(docDetailExcelModel.getCellCount() - 3);
         cell6.setCellValue("周期");
@@ -105,14 +120,24 @@ public class TitleSheetWriteHandler implements SheetWriteHandler {
         Cell cell61 = row.createCell(docDetailExcelModel.getCellCount() - 2);
         cell61.setCellValue(docDetailExcelModel.getPlanCycle());
         cell61.setCellStyle(cellValueStyleInfo);
-        sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, docDetailExcelModel.getCellCount() - 2, docDetailExcelModel.getCellCount() - 1));
+
+        CellRangeAddress cellRangeAddress5= new CellRangeAddress(1, 1, docDetailExcelModel.getCellCount() - 2, docDetailExcelModel.getCellCount() - 1);
+        sheet.addMergedRegionUnsafe(cellRangeAddress5);
+        setRegion(sheet,cellRangeAddress5);
 
     }
 
-    private void setFont(Workbook workbook, CellStyle cellStyle, int value) {
+    private void setRegion(Sheet sheet,CellRangeAddress rangeAddress){
+        RegionUtil.setBorderBottom(BorderStyle.THIN, rangeAddress, sheet);
+        RegionUtil.setBorderTop(BorderStyle.THIN, rangeAddress, sheet);
+        RegionUtil.setBorderLeft(BorderStyle.THIN, rangeAddress, sheet);
+        RegionUtil.setBorderRight(BorderStyle.THIN, rangeAddress, sheet);
+    }
+
+    private void setFont(Workbook workbook, CellStyle cellStyle, int value,boolean bold) {
         Font font = workbook.createFont();
-        font.setBold(true);
-        font.setFontHeight((short) value);
+        font.setBold(bold);
+        font.setFontHeightInPoints((short)value);
         cellStyle.setFont(font);
     }
 

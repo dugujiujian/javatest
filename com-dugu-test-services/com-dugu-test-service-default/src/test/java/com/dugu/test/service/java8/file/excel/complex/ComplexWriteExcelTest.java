@@ -13,6 +13,7 @@ import com.dugu.test.service.java8.file.excel.complex.strategy.TitleSheetWriteHa
 import com.dugu.test.service.java8.file.excel.complex.strategy.CustomMergeStrategy;
 import com.dugu.test.service.java8.file.excel.complex.strategy.SummarySheetWriteHandler;
 import com.dugu.test.service.performance.domain.UserSimpleDTO;
+import com.google.common.collect.Maps;
 import junit.framework.TestCase;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
@@ -25,12 +26,18 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.dugu.test.service.java8.file.excel.complex.strategy.CustomHorizontalCellStyleStrategy.getHorizontalCellStyleStrategy;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 /**
  * @author cihun
@@ -213,6 +220,10 @@ public class ComplexWriteExcelTest extends TestCase {
         if (docDetailExcelModel.getEmployeeScore() != null) {
             employeeScoreHeader(config, headModelList, headerList, docDetailExcelModel.getEmployeeScore().getWeight());
         }
+        // 同事互评评分
+        if (StringUtils.isNotEmpty(docDetailExcelModel.getInviteWeight())) {
+            inviteScoreHeader(config, docDetailDataModelList, headModelList, headerList, docDetailExcelModel.getInviteWeight());
+        }
         // 上级评分
         if (StringUtils.isNotEmpty(docDetailExcelModel.getLeaderScoreWeight())) {
             leaderScoreHeader(config, docDetailDataModelList, headModelList, headerList, docDetailExcelModel.getLeaderScoreWeight());
@@ -266,20 +277,60 @@ public class ComplexWriteExcelTest extends TestCase {
                                    List<ExcelHeaderModel> headModelList,
                                    List<List<String>> headerList,
                                    String weight) {
-//        userScoreHeadModelList.forEach(e -> {
-//            List<String> scoreHeader = Lists.newArrayList();
-//            scoreHeader.add("同事互评（" + weight + "）");
-//            scoreHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
-//            scoreHeader.add("评分");
-//            List<String> commentHeader = Lists.newArrayList();
-//            commentHeader.add("同事互评（" + weight + "）");
-//            commentHeader.add(e.getLabel() + "（" + e.getWeight() + ")");
-//            commentHeader.add("评语");
-//            headerList.add(scoreHeader);
-//            headerList.add(commentHeader);
-//        });
+        if (CollectionUtils.isNotEmpty(docDetailDataModelList)) {
+            ExcelHeaderModel excelHeaderModel = new ExcelHeaderModel();
+            excelHeaderModel.setFixed(Boolean.FALSE);
+            excelHeaderModel.setFieldName(ExcelFieldUtil.VALUE_INVITE_SCORE);
+            headModelList.add(excelHeaderModel);
+
+
+            List<UserScoreValueModel> newUserScoreValueModels = getUserScoreValueModels(docDetailDataModelList);
+
+            if (CollectionUtils.isNotEmpty(newUserScoreValueModels)) {
+                newUserScoreValueModels.forEach(e -> {
+                    // 权重
+                    List<String> weightHeader = Lists.newArrayList();
+                    weightHeader.add("同事互评评分（" + weight + "%）");
+                    weightHeader.add(e.getUser().getLabel());
+                    weightHeader.add(ExcelFieldUtil.NAME_WEIGHT);
+                    headerList.add(weightHeader);
+                    //分数
+                    List<String> scoreHeader = Lists.newArrayList();
+                    scoreHeader.add("同事互评评分（" + weight + "%）");
+                    scoreHeader.add(e.getUser().getLabel());
+                    scoreHeader.add(ExcelFieldUtil.NAME_SCORE);
+                    headerList.add(scoreHeader);
+                    if (config.getShowComment() == null || config.getShowComment()) {
+                        List<String> commentHeader = Lists.newArrayList();
+                        commentHeader.add("同事互评评分（" + weight + "%）");
+                        commentHeader.add(e.getUser().getLabel());
+                        commentHeader.add(ExcelFieldUtil.NAME_COMMENT);
+                        headerList.add(commentHeader);
+                    }
+                });
+                if (config.getShowTotal() == null || config.getShowTotal()) {
+                    List<String> commentHeader = Lists.newArrayList();
+                    commentHeader.add(ExcelFieldUtil.NAME_OBJECT_INVITE_SCORE);
+                    headerList.add(commentHeader);
+                    excelHeaderModel = new ExcelHeaderModel();
+                    excelHeaderModel.setFixed(Boolean.FALSE);
+                    excelHeaderModel.setFieldName(ExcelFieldUtil.VALUE_OBJECT_INVITE_SCORE);
+                    headModelList.add(excelHeaderModel);
+                }
+
+            }
+        }
     }
 
+    private List<UserScoreValueModel> getUserScoreValueModels(List<DocDetailDataModel> docDetailDataModelList) {
+        if (CollectionUtils.isNotEmpty(docDetailDataModelList)) {
+            return docDetailDataModelList.stream().filter(Objects::nonNull)
+                    .flatMap(e -> e.getInviteScoreList().stream().filter(Objects::nonNull))
+                    .collect(Collectors.toList()).stream().
+                    collect(collectingAndThen(toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getUser().getId()))), ArrayList::new));
+        }
+        return Lists.newArrayList();
+    }
 
     private void leaderScoreHeader(DocDetailExcelConfig config,
                                    List<DocDetailDataModel> docDetailDataModelList,
@@ -341,6 +392,7 @@ public class ComplexWriteExcelTest extends TestCase {
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
+        List<UserScoreValueModel> inviteList = getUserScoreValueModels(list);
         try {
             for (DocDetailDataModel t : list) {
                 List<Object> rowLine = new ArrayList<>();
@@ -364,6 +416,31 @@ public class ComplexWriteExcelTest extends TestCase {
                                 rowLine.add(e.getScore());
                                 if (config.getShowComment() != null && config.getShowComment()) {
                                     rowLine.add(e.getComment());
+                                }
+                            });
+                        }
+                    } else if (ExcelFieldUtil.VALUE_INVITE_SCORE.equals(s.getFieldName())) {
+                        List<UserScoreValueModel> value = (List<UserScoreValueModel>) getMethod.invoke(t, new Object[]{});
+                        if (CollectionUtils.isNotEmpty(value) && CollectionUtils.isNotEmpty(inviteList)) {
+                            Map<String, UserScoreValueModel> valueModelMap = value.stream().collect(Collectors.toMap(e -> e.getUser().getId(), Function.identity(), (k1, k2) -> k1));
+                            inviteList.forEach(e -> {
+                                UserScoreValueModel u = valueModelMap.get(e.getUser().getId());
+                                if (u != null) {
+                                    if (StringUtils.isNotEmpty(e.getWeight())) {
+                                        rowLine.add(e.getWeight() + "%");
+                                    } else {
+                                        rowLine.add("");
+                                    }
+                                    rowLine.add(e.getScore());
+                                    if (config.getShowComment() != null && config.getShowComment()) {
+                                        rowLine.add(e.getComment());
+                                    }
+                                } else {
+                                    rowLine.add("");
+                                    rowLine.add("");
+                                    if (config.getShowComment() != null && config.getShowComment()) {
+                                        rowLine.add("");
+                                    }
                                 }
                             });
                         }
@@ -431,6 +508,31 @@ public class ComplexWriteExcelTest extends TestCase {
         employeeScore.setScore("10.1");
         employeeScore.setComment("我自我感觉良好");
         docDetailDataModel1.setEmployeeScore(employeeScore);
+        // 邀请评分
+        List<UserScoreValueModel> inviteScoreList = Lists.newArrayList();
+
+        UserSimpleDTO inviteUser1 = new UserSimpleDTO();
+        inviteUser1.setLabel("005");
+        inviteUser1.setId("1");
+        UserSimpleDTO inviteUser2 = new UserSimpleDTO();
+        inviteUser2.setLabel("008");
+        inviteUser2.setId("2");
+
+
+        UserScoreValueModel invite1 = new UserScoreValueModel();
+        invite1.setScore("92");
+        invite1.setComment("邀请评分1");
+        invite1.setUser(inviteUser1);
+        invite1.setWeight("20");
+        inviteScoreList.add(invite1);
+        UserScoreValueModel invite2 = new UserScoreValueModel();
+        invite2.setScore("89");
+        invite2.setComment("邀请评分2");
+        invite2.setUser(inviteUser2);
+        invite2.setWeight("80");
+        inviteScoreList.add(invite2);
+        docDetailDataModel1.setInviteScoreList(inviteScoreList);
+
 
         // 上级评分
         List<UserScoreValueModel> leaderScoreList = Lists.newArrayList();
@@ -440,14 +542,14 @@ public class ComplexWriteExcelTest extends TestCase {
         leader2.setLabel("99");
         UserScoreValueModel leaderScore = new UserScoreValueModel();
         leaderScore.setScore("92");
-        leaderScore.setComment("自定义主管评分1");
+        leaderScore.setComment("自定义主管评分3");
         leaderScore.setUser(leader);
         leaderScore.setWeight("20");
         leaderScoreList.add(leaderScore);
 
         leaderScore = new UserScoreValueModel();
         leaderScore.setScore("99");
-        leaderScore.setComment("自定义主管评分2");
+        leaderScore.setComment("自定义主管评分4");
         leaderScore.setUser(leader2);
         leaderScore.setWeight("80");
         leaderScoreList.add(leaderScore);
@@ -480,6 +582,31 @@ public class ComplexWriteExcelTest extends TestCase {
         employeeScore2.setComment("");
         docDetailDataModel2.setEmployeeScore(employeeScore2);
 
+        // 邀请评分
+        List<UserScoreValueModel> inviteScoreList2 = Lists.newArrayList();
+
+        UserSimpleDTO inviteUser3 = new UserSimpleDTO();
+        inviteUser3.setId("3");
+        inviteUser3.setLabel("99");
+        UserSimpleDTO inviteUser4 = new UserSimpleDTO();
+        inviteUser4.setLabel("001");
+        inviteUser4.setId("4");
+
+
+        UserScoreValueModel invite3 = new UserScoreValueModel();
+        invite3.setScore("93.1");
+        invite3.setComment("邀请评分1");
+        invite3.setUser(inviteUser3);
+        inviteScoreList2.add(invite3);
+        UserScoreValueModel invite4 = new UserScoreValueModel();
+        invite4.setScore("92.0");
+        invite4.setComment("邀请评分2");
+        invite4.setUser(inviteUser4);
+        inviteScoreList2.add(invite4);
+        docDetailDataModel2.setInviteScoreList(inviteScoreList2);
+
+        docDetailDataModel2.setObjectInviteTotal("23.2");
+
         // 上级评分
         List<UserScoreValueModel> leaderScoreList2 = Lists.newArrayList();
         UserScoreValueModel leaderScore2 = new UserScoreValueModel();
@@ -507,7 +634,6 @@ public class ComplexWriteExcelTest extends TestCase {
     }
 
 
-
     private DocDetailExcelConfig config() {
         DocDetailExcelConfig config = new DocDetailExcelConfig();
         // config.setHead("目标值,完成值,权重(%)");
@@ -515,8 +641,6 @@ public class ComplexWriteExcelTest extends TestCase {
         config.setShowTotal(true);
         return config;
     }
-
-
 
 
 }

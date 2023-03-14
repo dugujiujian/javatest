@@ -26,5 +26,8 @@ public class DocDetailExcelConfig {
     private Boolean showTotal;
 
 
+    private String computeType;
+
+
 
 }

@@ -24,6 +24,8 @@ public class ExcelFieldUtil {
     public final static String NAME_OBJECT_TOTAL_SCORE = "合计";
 
 
+    public final static String NAME_WEIGHT = "权重";
+    public final static String VALUE_WEIGHT = "weight";
     public final static String NAME_SCORE = "评分";
     public final static String VALUE_SCORE = "score";
     public final static String NAME_COMMENT = "评语";

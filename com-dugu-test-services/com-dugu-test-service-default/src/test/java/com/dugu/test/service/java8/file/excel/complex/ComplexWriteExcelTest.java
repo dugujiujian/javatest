@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.dugu.test.service.java8.file.excel.complex.strategy.CustomHorizontalCellStyleStrategy.getHorizontalCellStyleStrategy;
+
 /**
  * @author cihun
  * @date 2023-02-19 1:07 下午
@@ -103,7 +105,7 @@ public class ComplexWriteExcelTest extends TestCase {
      */
     @Test
     public void testDynamicHeader() throws FileNotFoundException {
-        String fileName = "//Users/zhaohaihua/Documents/complex.xlsx";
+        String fileName = "//Users/cihun/Documents/complex.xlsx";
 
         //创建表格对象
         WriteTable table = new WriteTable();
@@ -142,24 +144,24 @@ public class ComplexWriteExcelTest extends TestCase {
         ExcelWriter excelWriter = EasyExcel.write(new FileOutputStream(fileName)).build();
         WriteSheet sheet = EasyExcel.writerSheet(docDetailExcelModel.getPlanName())
                 .sheetNo(1)
+                .head(headList)
                 .relativeHeadRowIndex(2)
                 .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
                 .registerWriteHandler(new CustomMergeStrategy(mergeLine(data), 0))
                 .registerWriteHandler(new CustomMergeStrategy(mergeLine(data), 1))
                 .registerWriteHandler(new CustomMergeStrategy(mergeLine(data), 2))
                 .registerWriteHandler(new BudgetDeclareSheetWriteHandler(docDetailExcelModel))
+                .registerWriteHandler(getHorizontalCellStyleStrategy())
                 .build();
-        sheet.setHead(headList);
         excelWriter.write(data, sheet);
 
-        WriteTable table2 = new WriteTable();
+        WriteTable tableSummary = new WriteTable();
         //设置第N个表格
-        table2.setTableNo(2);
-        table2.setNeedHead(false);
+        tableSummary.setTableNo(2);
+        tableSummary.setNeedHead(false);
         docDetailExcelModel.setLeaderScoreList(docDetailDataModelList.get(0).getLeaderScoreList());
-        table2.setCustomWriteHandlerList(Collections.singletonList(new SummarySheetWriteHandler(docDetailExcelModel)));
-        excelWriter.write(Lists.newArrayList(), sheet, table2);
-
+        tableSummary.setCustomWriteHandlerList(Collections.singletonList(new SummarySheetWriteHandler(docDetailExcelModel)));
+        excelWriter.write(Lists.newArrayList(), sheet, tableSummary);
         //  释放资源
         excelWriter.finish();
     }
@@ -181,6 +183,8 @@ public class ComplexWriteExcelTest extends TestCase {
         docDetailExcelModel.setLeaderScoreWeight("70");
         //
         docDetailExcelModel.setEmployeeScore("99.1");
+        docDetailExcelModel.setLeaderScore("88.1");
+        docDetailExcelModel.setLeaderValueScore("A");
 
 
         return docDetailExcelModel;
@@ -499,7 +503,7 @@ public class ComplexWriteExcelTest extends TestCase {
 
     private DocDetailExcelConfig config() {
         DocDetailExcelConfig config = new DocDetailExcelConfig();
-        config.setHead("目标值,完成值,权重(%)");
+       // config.setHead("目标值,完成值,权重(%)");
         config.setShowComment(false);
         config.setShowTotal(true);
         return config;

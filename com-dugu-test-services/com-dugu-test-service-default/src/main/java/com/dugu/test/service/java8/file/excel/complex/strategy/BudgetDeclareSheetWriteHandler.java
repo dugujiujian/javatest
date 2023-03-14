@@ -121,5 +121,6 @@ public class BudgetDeclareSheetWriteHandler implements SheetWriteHandler {
         Cell cell61 = row2.createCell(docDetailExcelModel.getCellCount() - 2);
         cell61.setCellValue(docDetailExcelModel.getPlanCycle());
         sheet.addMergedRegionUnsafe(new CellRangeAddress(1, 1, docDetailExcelModel.getCellCount() - 2, docDetailExcelModel.getCellCount() - 1));
+
     }
 }

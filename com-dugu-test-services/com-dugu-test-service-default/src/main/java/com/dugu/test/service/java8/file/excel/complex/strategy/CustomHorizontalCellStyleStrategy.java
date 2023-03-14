@@ -4,9 +4,13 @@ import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.metadata.style.WriteFont;
 import com.alibaba.excel.write.style.HorizontalCellStyleStrategy;
 import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author cihun
@@ -18,48 +22,67 @@ public class CustomHorizontalCellStyleStrategy {
 
 
     public static HorizontalCellStyleStrategy getHorizontalCellStyleStrategy() {
-        // excel 表头格式设置
-        WriteCellStyle headCellStyle = new WriteCellStyle();
-        //蓝绿色
-        headCellStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
-
+        WriteCellStyle headWriteCellStyle = new WriteCellStyle();
+        //设置表头居中对齐
+        headWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        //表头前景设置淡蓝色
+        headWriteCellStyle.setFillForegroundColor(IndexedColors.PALE_BLUE.getIndex());
         WriteFont headWriteFont = new WriteFont();
-        headWriteFont.setFontHeightInPoints(FONT_HEIGHT_IN_POINTS);
+        headWriteFont.setBold(true);
         headWriteFont.setFontName("宋体");
-        //字体加粗
-        headWriteFont.setBold(Boolean.TRUE);
+        headWriteFont.setFontHeightInPoints((short) 12);
+        headWriteCellStyle.setWriteFont(headWriteFont);
 
-        //设置字体
-        headCellStyle.setWriteFont(headWriteFont);
-        //自动换行
-        headCellStyle.setWrapped(Boolean.TRUE);
-        //垂直居中
-        headCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        // 设置左右对齐为靠左对齐
-        headCellStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        // 设置单元格上下左右边框为细边框
-        headCellStyle.setBorderBottom(BorderStyle.THIN);
-        headCellStyle.setBorderLeft(BorderStyle.THIN);
-        headCellStyle.setBorderRight(BorderStyle.THIN);
-        headCellStyle.setBorderTop(BorderStyle.THIN);
+        //内容样式  多个样式则隔行换色
+        List<WriteCellStyle> listCntWritCellSty = new ArrayList<>();
 
-
-        // excel表格内容样式设置
-        WriteCellStyle contentCellStyle = new WriteCellStyle();
-
+        //2 内容样式策略  样式一
+        WriteCellStyle contentWriteCellStyle = new WriteCellStyle();
         WriteFont contentWriteFont = new WriteFont();
-        contentWriteFont.setFontHeightInPoints(FONT_HEIGHT_IN_POINTS);
+        //内容字体大小
         contentWriteFont.setFontName("宋体");
-        contentWriteFont.setFontHeightInPoints(FONT_HEIGHT_IN_POINTS);
-        contentCellStyle.setWriteFont(contentWriteFont);
+        contentWriteFont.setFontHeightInPoints((short) 11);
+        contentWriteCellStyle.setWriteFont(contentWriteFont);
+        //设置自动换行
+        contentWriteCellStyle.setWrapped(true);
+        //设置垂直居中
+        contentWriteCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        // 头默认了 FillPatternType所以可以不指定。
+        //contentWriteCellStyle.setFillPatternType(FillPatternType.SOLID_FOREGROUND);
+        //设置背景黄色
+        //设置水平靠左
+        //contentWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.LEFT);
+        //设置边框样式
+        setBorderStyle(contentWriteCellStyle);
+        //内容风格可以定义多个。
+        listCntWritCellSty.add(contentWriteCellStyle);
 
-        //自动换行
-        contentCellStyle.setWrapped(Boolean.TRUE);
+        //2 内容样式策略  样式二
+        WriteCellStyle contentWriteCellStyle2 = new WriteCellStyle();
+        // 这里需要指定 FillPatternType 为FillPatternType.SOLID_FOREGROUND 不然无法显示背景颜色。
+        // 头默认了 FillPatternType所以可以不指定。
+        // 背景绿色
+        //设置垂直居中
+        contentWriteCellStyle2.setVerticalAlignment(VerticalAlignment.CENTER);
+        //设置边框样式
+        setBorderStyle(contentWriteCellStyle2);
+        listCntWritCellSty.add(contentWriteCellStyle2);
+        // 水平单元格风格综合策略(表头 + 内容)
+        return new HorizontalCellStyleStrategy(headWriteCellStyle, listCntWritCellSty);
 
-        //垂直居中
-        contentCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        contentCellStyle.setHorizontalAlignment(HorizontalAlignment.LEFT);
-
-        return new HorizontalCellStyleStrategy(headCellStyle, contentCellStyle);
     }
+
+    /**
+     * 设置边框样式
+     *
+     * @param contentWriteCellStyle
+     */
+    private static void setBorderStyle(WriteCellStyle contentWriteCellStyle) {
+        //设置边框样式
+        contentWriteCellStyle.setBorderLeft(BorderStyle.THIN);
+        contentWriteCellStyle.setBorderTop(BorderStyle.THIN);
+        contentWriteCellStyle.setBorderRight(BorderStyle.THIN);
+        contentWriteCellStyle.setBorderBottom(BorderStyle.THIN);
+    }
+
 }

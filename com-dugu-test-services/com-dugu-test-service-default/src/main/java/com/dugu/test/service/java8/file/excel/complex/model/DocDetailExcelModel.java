@@ -104,5 +104,10 @@ public class DocDetailExcelModel {
      */
     private List<UserScoreValueModel> leaderScoreList;
 
+    /**
+     * 邀请评分
+     */
+    private List<UserScoreValueModel> inviteScoreList;
+
 
 }

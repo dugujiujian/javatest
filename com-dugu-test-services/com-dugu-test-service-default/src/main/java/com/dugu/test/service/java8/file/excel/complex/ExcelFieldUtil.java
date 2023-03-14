@@ -14,7 +14,6 @@ public class ExcelFieldUtil {
     public final static String VALUE_EMPLOYEE_SCORE = "employeeScore";
     public final static String VALUE_INVITE_SCORE = "inviteScoreList";
     public final static String VALUE_LEADER_SCORE = "leaderScoreList";
-
     public final static String VALUE_OBJECT_EMPLOYEE_TOTAL = "objectEmployeeTotal";
     public final static String NAME_OBJECT_EMPLOYEE_TOTAL = "自评合计";
     public final static String VALUE_OBJECT_INVITE_SCORE = "objectInviteTotal";

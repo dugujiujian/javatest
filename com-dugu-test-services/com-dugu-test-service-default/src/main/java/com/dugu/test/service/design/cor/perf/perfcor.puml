@@ -1,0 +1,34 @@
+@startuml
+interface PerformanceHandler {
+ + void doHandler(DocProcessRequest request,DocProcessResponse response,PerformanceHandlerChain chain);
+}
+interface DocProcessChainService {
+ + boolean doHandler(DocProcessRequest request, DocProcessResponse response)
+}
+class PerformanceHandlerChain {
+  * List<PerformanceHandler> handlers
+  + doHandler(DocProcessRequest request, DocProcessResponse response)
+}
+class DocProcessRequest {}
+class DocProcessResponse {}
+class PerformanceHandlerChain {}
+class DocProcessChainServiceImpl {
+   * List<PerformanceHandler> handlerList
+   + boolean doHandler(DocProcessRequest request, DocProcessResponse response)
+}
+
+
+PerformanceHandlerChain  o-- PerformanceHandler
+DocProcessChainServiceImpl  o-- PerformanceHandler
+DocProcessChainServiceImpl  -- PerformanceHandlerChain
+
+DocProcessChainService <|--	 DocProcessChainServiceImpl
+InitializingBean <|--	 DocProcessChainServiceImpl
+ApplicationContextAware <|--	 DocProcessChainServiceImpl
+
+PerformanceHandler <|--	 AfterHandlerImpl
+PerformanceHandler <|--	 InitHandlerImpl
+PerformanceHandler <|--	 BizHandlerImpl
+PerformanceHandler <|--	 MessageHandlerImpl
+
+@enduml

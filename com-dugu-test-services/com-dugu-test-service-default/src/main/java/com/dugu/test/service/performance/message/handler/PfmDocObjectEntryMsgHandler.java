@@ -32,11 +32,6 @@ public class PfmDocObjectEntryMsgHandler extends AbsPfmDocMessageHandler<Process
     }
 
     @Override
-    protected void msgLog(PfmDocMsgResponse response) {
-        System.out.println(onProcessCode() + "->msgLog");
-    }
-
-    @Override
     protected ProcessCodeEnum onProcessCode() {
         return ProcessCodeEnum.objectives_entry;
     }

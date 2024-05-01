@@ -21,20 +21,16 @@ public class PfmDocObjectApproveMsgHandler extends AbsPfmDocMessageHandler<Proce
         // 获取消息模版
         // 组装消息日志参数
         // 发送消息
-        System.out.println(onProcessCode()+"->batch");
+        System.out.println(onProcessCode() + "->batch");
         return true;
     }
 
     @Override
     protected boolean doHandle(PfmDocMsgSingleSendRequest request, PfmDocMsgResponse response) {
-        System.out.println(onProcessCode()+"->single");
+        System.out.println(onProcessCode() + "->single");
         return true;
     }
 
-    @Override
-    protected void msgLog(PfmDocMsgResponse response) {
-        System.out.println(onProcessCode()+"->msgLog");
-    }
 
     @Override
     protected ProcessCodeEnum onProcessCode() {

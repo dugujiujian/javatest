@@ -89,7 +89,9 @@ public abstract class AbsPfmDocMessageHandler<S extends ProcessCodeEnum,E extend
      * @param response
      * @return
      */
-    protected abstract void msgLog(PfmDocMsgResponse response);
+    protected  void msgLog(PfmDocMsgResponse response){
+        //消息日志入库
+    }
 
     /**
      * 当前状态

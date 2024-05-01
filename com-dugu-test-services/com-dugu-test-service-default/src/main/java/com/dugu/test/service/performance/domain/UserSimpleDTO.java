@@ -13,5 +13,5 @@ import lombok.ToString;
 @ToString
 public class UserSimpleDTO {
     private String id;
-    private String name;
+    private String label;
 }

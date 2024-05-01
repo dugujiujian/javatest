@@ -14,7 +14,7 @@
         <module>com-dugu-test-service-default</module>
     </modules>
 
-    <artifactId>com-dugu-test-service</artifactId>
+    <artifactId>com-dugu-test-services</artifactId>
 
     <dependencies>
         <dependency>

@@ -5,9 +5,7 @@ import com.dugu.test.service.performance.domain.response.DocProcessResponse;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 责任脸

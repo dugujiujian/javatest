@@ -22,6 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven-antrun.version>1.8</maven-antrun.version>
+        <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
         <!-- spring boot -->
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
         <!-- Test -->
@@ -51,6 +52,15 @@
 
     <dependencyManagement>
         <dependencies>
+
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
             <!-- 应用模块 -->
             <dependency>
                 <groupId>com.dugu.javatest</groupId>

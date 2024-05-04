@@ -67,7 +67,7 @@ public class DocProcessServiceImpl implements DocProcessService {
      * @return
      */
     private boolean pushToNextState() {
-
+        return false;
     }
 
     private void fromHandler(DocProcessRequest request, DocProcessResponse response, DocProcessResult result) {

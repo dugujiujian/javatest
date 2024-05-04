@@ -14,9 +14,6 @@ import java.util.List;
  * @Date 2022/12/11 11:42
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class DocProcessBatchRequest extends DocProcessRequest{
     private static final long serialVersionUID = 5486433242070719878L;
     private String planId;

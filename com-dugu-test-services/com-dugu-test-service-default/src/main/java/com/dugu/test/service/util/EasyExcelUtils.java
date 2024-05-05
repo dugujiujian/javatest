@@ -3,10 +3,14 @@ package com.dugu.test.service.util;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.dugu.test.util.DateUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,5 +48,22 @@ public class EasyExcelUtils {
             excelWriter.write(dataList.get(i), sheet);
         }
         excelWriter.finish();
+    }
+
+    /**
+     * 初始化响应体
+     *
+     * @param response 请求头
+     * @param fileName 导出名称
+     */
+    public static void initResponse(HttpServletResponse response, String fileName) throws IOException {
+        // 最终文件名：文件名_(截止yyyy-MM-dd)  --> 这块地方得根据你们自己项目做更改了
+        String finalFileName = fileName + "_(截止" + DateUtils.localDateTime2Text(LocalDateTime.now(),DateUtils.DATETIME_PATTERN_FULL) + ")";
+        // 设置content—type 响应类型
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        // 这里URLEncoder.encode可以防止中文乱码
+        finalFileName = URLEncoder.encode(finalFileName, "UTF-8");
+        response.setHeader("Content-disposition", "attachment;filename=" + finalFileName + ".xlsx");
     }
 }

@@ -129,6 +129,11 @@
                 <artifactId>easyexcel</artifactId>
                 <version>3.2.1</version>
             </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>1.6.14</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.alibaba</groupId>

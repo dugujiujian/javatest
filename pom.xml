@@ -40,6 +40,8 @@
         <jedis.version>3.5.2</jedis.version>
         <rdb2.version>2.3.3</rdb2.version>
 
+        <itext.version>7.2.4</itext.version>
+
     </properties>
 
 
@@ -169,8 +171,38 @@
                 <artifactId>jedis</artifactId>
                 <version>${jedis.version}</version>
             </dependency>
-
-
+            <!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>kernel</artifactId>
+                <version>${itext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>io</artifactId>
+                <version>${itext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>layout</artifactId>
+                <version>${itext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>forms</artifactId>
+                <version>${itext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>pdfa</artifactId>
+                <version>${itext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itextpdf</groupId>
+                <artifactId>font-asian</artifactId>
+                <version>${itext.version}</version>
+            </dependency>
+            <!-- itext-end -->
 
             <dependency>
                 <groupId>com.googlecode.catch-exception</groupId>

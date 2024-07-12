@@ -48,7 +48,6 @@ public class RedisTest {
      *
      * @throws Exception void
      * @Title testExpire
-     * @author 于国帅
      * @date 2019年3月7日 上午8:35:24
      */
     @Test
@@ -383,7 +382,7 @@ public class RedisTest {
     //
     @Test
     public void testLGetIndex() throws Exception {
-        redisUtil.lSet("testLGetIndex", "testLGetIndex0", 10); // 10秒过期
+        redisUtil.lSet("testLGet    Index", "testLGetIndex0", 10); // 10秒过期
         redisUtil.lSet("testLGetIndex", "testLGetIndex1", 10);
         Object obj = redisUtil.lGetIndex("testLGetIndex", 0);
         Assert.assertEquals(obj, "testLGetIndex0");
